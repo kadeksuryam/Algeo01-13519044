@@ -9,7 +9,7 @@ public class Matrix{
     //define the static attributes 
     private int nRow, nCol;
     private double[][] matrix;
-
+    boolean isFileExist = true;
     //define the constructors 
    // construct empty matrix 
     public Matrix(){
@@ -62,6 +62,7 @@ public class Matrix{
        //      scFile.close();
         } catch(FileNotFoundException ex){
             //in case file is not found
+            isFileExist = false;
             System.out.println("Nama file yang anda masukkan salah atau tidak ada file yang dimaksud di folder test!");
         }
 
