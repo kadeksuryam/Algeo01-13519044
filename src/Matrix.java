@@ -82,6 +82,7 @@ public class Matrix{
                 this.matrix[i][j] = input.nextDouble();
             }
         }
+        input.close();
     }
 
     public void outputMatrixFromFile(String fileName){
@@ -122,7 +123,7 @@ public class Matrix{
         this.nCol = nCol;
     }
     public void copyMatrix(Matrix origin){
-        this.nRow = origin.getNRow();
+        this.nRow = origin.getNRow();   
         this.nCol = origin.getNCol();
         double[][] matrix = origin.getMatrix();
         this.matrix = new double[this.nRow][this.nCol];
@@ -345,8 +346,62 @@ public class Matrix{
         }
         
     }
-    public double determinantByCofactor(){
-        return 0;
+    public double minorMatrix(int x, int y){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        temp = temp.cutOneRow(x);
+        temp = temp.cutOneCol(y);
+        return temp.determinantByReduction();
     }
+
+    public Matrix cofactorMatrix(){
+        Matrix cfc = new Matrix(this.nRow, this.nCol);
+        int sign;
+        for (int row = 0; row < this.nRow; row++){
+            for (int col=0; col < this.nCol; col++){
+                sign = 1 - 2*((row+col) & 1);
+                cfc.matrix[row][col] = sign * this.minorMatrix(row, col); 
+            }
+        }
+        return cfc;
+    }
+
+    public double determinantByCofactor(){
+        //Menggunakan perkalian dot pada baris pertama matriks dengan baris kofaktor
+        Matrix temp = new Matrix();
+        temp = this.cofactorMatrix();
+        double hasil = 0;
+        for (int col = 0; col < this.nCol; col++){
+            hasil += temp.matrix[0][col] * this.matrix[0][col];
+        }
+        return hasil;
+    }
+
+    public Matrix adjoinMatrix(){
+        Matrix temp = new Matrix();
+        temp = this.cofactorMatrix();
+        temp.transpose();
+        return temp;
+    }
+
+    public Matrix conMultiplyMatrix(double k){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        for (int row = 0; row < this.nRow; row++){
+            for (int col =0; col < this.nCol; col++){
+                temp.matrix[row][col] *= k;
+            }
+        }
+        return temp;
+    }
+
+    public Matrix inverseByCofactor(){
+        Matrix temp = new Matrix();
+        temp = this.adjoinMatrix();
+        double ratio = 1/(this.determinantByCofactor());
+        temp = temp.conMultiplyMatrix(ratio);
+        return temp;
+    }
+
 
 }
