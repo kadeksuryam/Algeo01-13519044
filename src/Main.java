@@ -3,7 +3,9 @@ import java.util.Scanner;
 
 public class Main{
     static Scanner sc = new Scanner(System.in);
-
+    public static Matrix input;
+    public static double hasilDeterminan;
+    public static int metode;
     public static void main(String[] args){
         mainMenu();
     }
@@ -27,27 +29,27 @@ public class Main{
                 else{
                     switch(selection){
                         case 1:{
-            
+                            break;
                         }
                         case 2:{
                             determinanMenu();
+                            break;
                         }
                         case 3:{
-            
+                            break;
                         }
                         case 4:{
-            
+                            break;
                         }
                         case 5:{
-            
+                            break;
                         }
                         case 6:{
                             System.exit(0);
-                        }
-                        default:{
+                            break;
                         }
                     }
-                    return;
+                    mainMenu();
                 }
             }
             catch(InputMismatchException e){
@@ -57,6 +59,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                mainMenu();
+                return;
             }
             catch(Exception e){
                 System.out.println("Masukan haruslah sebuah angka dari 1 sampai 6!");
@@ -64,6 +68,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                mainMenu();
+                return;
             }
         }
 
@@ -85,13 +91,18 @@ public class Main{
                 else{
                     switch (selection){
                         case 1:{
-                            determinanInputMenu(1);
+                            metode = 1;
+                            inputMenu("Determinan");
+                            break;
                         }
                         case 2:{
-                            determinanInputMenu(2);
+                            metode = 2;
+                            inputMenu("Determinan");
+                            break;
                         }
                         default:{
                             mainMenu();
+                            break;
                         }
                     }
                 }
@@ -103,6 +114,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                determinanMenu();
+                return;
             }
             catch(Exception e){
                 System.out.println("Masukan haruslah sebuah angka dari 1 sampai 4!");
@@ -110,16 +123,19 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                determinanMenu();
+                return;
             }
+            return;
         }
     }
-    public static void determinanInputMenu(int metode){
+    public static void inputMenu(String operasi){
         while(true){
             try{
                 int selection;
                 System.out.println(" ");
                 System.out.println("============================");
-                System.out.println("MENU Determinan");
+                System.out.println("Menu " + operasi);
                 System.out.println("1. Baca dari File");
                 System.out.println("2. Baca dari Konsol");
                 System.out.println("3. Balik ke Main Menu");
@@ -128,28 +144,64 @@ public class Main{
                 selection = sc.nextInt();
                 if(selection < 1 || selection > 3) throw new Exception();
                 else{
-                    Matrix input = new Matrix();
-                    double hasilDeterminan = 0.0;
+                    input = new Matrix();
+                    hasilDeterminan = 0.0;
                     switch (selection){
                         case 1:{
                            System.out.println("Masukkan nama File (diakhiri .txt): ");
                            String fileName =  sc.nextLine();
                             input.readMatrixFromFile(fileName);
-                            if(input.isFileExist){
-                                if(metode == 1) hasilDeterminan = input.determinantByReduction();
-                                else hasilDeterminan = input.determinantByCofactor();    
+                            switch(operasi){
+                                case "SPL":{
+                                    break;
+                                }
+                                case "Determinan":{
+                                    if(input.isFileExist){
+                                        if(metode == 1) hasilDeterminan = input.determinantByReduction();
+                                        else hasilDeterminan = input.determinantByCofactor();    
+                                    }
+                                    else determinanMenu();
+                                    outputMenu("Determinan");
+                                }
+                                case "Matriks Balikan":{
+                                    break;
+                                }
+                                case "Interpolasi Polinom":{
+                                    break;
+                                }
+                                case "Regresi Linier Berganda":{
+                                    break;
+                                }
                             }
-                            else determinanMenu();
-                            determinanOutputMenu(hasilDeterminan);
+                            break;
                         }
                         case 2:{
-                            input.readMatrixFromConsole();
-                            if(metode == 1) hasilDeterminan =  input.determinantByReduction();
-                            else hasilDeterminan = input.determinantByCofactor();    
-                            determinanOutputMenu(hasilDeterminan);
+                            switch(operasi){
+                                case "SPL":{
+                                    break;
+                                }
+                                case "Determinan":{
+                                    input.readMatrixFromConsole();
+                                    if(metode == 1) hasilDeterminan =  input.determinantByReduction();
+                                    else hasilDeterminan = input.determinantByCofactor();    
+                                    outputMenu("Determinan");
+                                    break;
+                                }
+                                case "Matriks Balikan":{
+                                    break;
+                                }
+                                case "Interpolasi Polinom":{
+                                    break;
+                                }
+                                case "Regresi Linier Berganda":{
+                                    break;
+                                }
+                            }
+                            break;
                         }
                         case 3:{
                             mainMenu();
+                            break;
                         }
                     }
                     
@@ -162,6 +214,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                inputMenu(operasi);
+                return;
             }
             catch(Exception e){
                 System.out.println("Masukan haruslah sebuah angka dari 1 sampai 3!");
@@ -169,20 +223,23 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                inputMenu(operasi);
+                return;
             }
+            return;
         }
     }
-    public static void determinanOutputMenu(double hasil){
+    public static void outputMenu(String operasi){
         while(true){
             try{
                 int selection;
                 System.out.println(" ");
                 System.out.println("============================");
                 System.out.println("MENU Determinan");
-                System.out.println("1. Tulis hasil ke dalam File");
-                System.out.println("2. Tulis hasil di Konsol");
-                System.out.println("3. Balik ke Input Matriks");
-                System.out.println("4. Balik ke Main Menu");
+                System.out.println("1. Tulis hasil ke dalam file");
+                System.out.println("2. Tulis hasil di konsol");
+                System.out.println("3. Balik ke menu input/sebelumnya");
+                System.out.println("4. Balik ke main menu");
                 System.out.println("============================");
                 System.out.print("Masukkan pilihan anda: ");
                 selection = sc.nextInt();
@@ -190,19 +247,43 @@ public class Main{
                 else{
                     switch (selection){
                         case 1:{
-
+                            break;
                         }
                         case 2:{
-                            System.out.println("Determinan matriks tersebut adalah " + hasil + "\n");
+                            switch (operasi){
+                                case "SPL":{
+                                    break;
+                                }
+                                case "Determinan":{
+                                    System.out.println("Determinan matriks tersebut adalah " + hasilDeterminan + "\n");
+                                    break;
+                                }
+                                case "Matriks Balikan":{
+                                    break;
+                                }
+                                case "Interpolasi Polinom":{
+                                    break;
+                                }
+                                case "Regresi Linier Berganda":{
+                                    break;
+                                }
+                            }
                             System.out.print("Tekan enter untuk melanjutkan...");
                             try{
                                 System.in.read();
                             } catch(Exception exKey){}
+                            break;
+                        }
+                        case 3:{
+                            inputMenu(operasi);
+                            break;
                         }
                         case 4:{
                             mainMenu();
+                            break;
                         }
                     }
+                    return;
                 }
             }
             catch(InputMismatchException e){
@@ -212,6 +293,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                outputMenu(operasi);
+                return;
             }
             catch(Exception e){
                 System.out.println("Masukan haruslah sebuah angka dari 1 sampai 4!");
@@ -219,6 +302,8 @@ public class Main{
                 try{
                     System.in.read();
                 } catch(Exception exKey){}
+                outputMenu(operasi);
+                return;
             }
         }
     }
