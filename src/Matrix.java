@@ -10,6 +10,7 @@ public class Matrix{
     private int nRow, nCol;
     private double[][] matrix;
     boolean isFileExist = true;
+    static Scanner input = new Scanner(System.in);
     //define the constructors 
    // construct empty matrix 
     public Matrix(){
@@ -68,8 +69,6 @@ public class Matrix{
 
     }
     public void readMatrixFromConsole(){
-        Scanner input = new Scanner(System.in);
-    	
         System.out.print("Banyak baris masukan: ");
         int nRow = input.nextInt();
         System.out.print("Banyak kolom masukan: ");
@@ -83,7 +82,7 @@ public class Matrix{
                 this.matrix[i][j] = input.nextDouble();
             }
         }
-        input.close();
+     //   input.close();
     }
 
     public void outputMatrixFromFile(String fileName){
@@ -257,7 +256,7 @@ public class Matrix{
         return swaps;
     }
     public void eliminasiGauss(){
-        int swaps = this.toTopTriangular();
+     //   int swaps = this.toTopTriangular();
         int nonZeroIdx=0;
         for(int i=0; i<this.nRow; i++){
             while(nonZeroIdx<this.nCol && this.matrix[i][nonZeroIdx]==0){
