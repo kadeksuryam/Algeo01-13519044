@@ -217,6 +217,13 @@ public class Matrix{
             }
         }
     }
+    public void addRowToRow(int addingRow, int addedRow, double multiplier){
+        int j;
+        for(j=0; j<this.nCol; j++){
+            this.matrix[addedRow][j] += (multiplier * this.matrix[addingRow][j]);
+        }
+    }
+
     //-------Complex Matrix Self Transformation-------//
     public int toTopTriangular(){
         //Mengubah matrix menjadi seperti bentuk eselon tereduksi namun bilangan taknol terdepan tiap baris tidak harus 1
@@ -240,14 +247,12 @@ public class Matrix{
                 //Tukar baris dengan nilai taknol tersebut dengan baris ke-n ini
                 if(i!=cRow){
                     swaps++;
-                    swapRow(i, cRow);
+                    this.swapRow(i, cRow);
                 }
                 //Maka sekarang kondisinya nilai this.matrix[n][m] taknol, sehingga dapat dioperasikan OBE
                 for(i=cRow+1; i<this.nRow; i++){
-                    double multiplier = this.matrix[i][cCol]/this.matrix[cRow][cCol];
-                    for(j=cCol; j<this.nCol; j++){
-                        this.matrix[i][j] -= (multiplier * this.matrix[cRow][j]);
-                    }
+                    double multiplier = -this.matrix[i][cCol]/this.matrix[cRow][cCol];
+                    this.addRowToRow(cRow, i, multiplier);
                 }
                 cRow++;
             }
@@ -269,7 +274,18 @@ public class Matrix{
         }
     }
     public void eliminasiGaussJordan(){
-
+        this.eliminasiGauss();
+        int leadingOne=0;
+        for(int i=0; i<this.nRow; i++){
+            while(leadingOne<this.nCol && this.matrix[i][leadingOne]==0){
+                leadingOne++;
+            }
+            if(leadingOne<this.nCol){
+                for(int j=0; j<i; j++){
+                    this.addRowToRow(i, j, -this.matrix[j][leadingOne]);
+                }
+            }
+        }
     }
 
     public void multiplyThisMatrix(Matrix origin){
