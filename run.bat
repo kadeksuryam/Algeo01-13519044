@@ -12,3 +12,4 @@ cd %CD%/bin
 java Main
 echo --------------------------------
 cd ..
+PAUSE
