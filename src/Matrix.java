@@ -9,7 +9,9 @@ public class Matrix{
     //define the static attributes 
     private int nRow, nCol;
     private double[][] matrix;
-
+    private double epsilon = 0.000001;
+    boolean isFileExist = true;
+    static Scanner input = new Scanner(System.in);
     //define the constructors 
    // construct empty matrix 
     public Matrix(){
@@ -17,7 +19,7 @@ public class Matrix{
         nCol = 0;
         matrix = new double[1][1];
     }
-    //contsruct matrix with size nRow and nCol
+    //construct matrix with size nRow and nCol
     public Matrix(int nRow, int nCol){
         this.nRow = nRow;
         this.nCol = nCol;
@@ -25,6 +27,21 @@ public class Matrix{
         //inisialisasi 0 semua (?)
         for(int row=0;row<nRow;row++){
             for(int col=0;col<nCol;col++) matrix[row][col] = 0;
+        }
+    }
+    //construct identity matrix with size nSize
+    public Matrix(int nSize){
+        this.nRow = nSize;
+        this.nCol = nSize;
+        this.matrix = new double[nSize][nSize];
+        for(int i=0; i<nSize; i++){
+            for(int j=0; j<nSize; j++){
+                if(i==j){
+                    this.matrix[i][j]=1;
+                }else{
+                    this.matrix[i][j]=0;
+                }
+            }
         }
     }
 
@@ -62,13 +79,12 @@ public class Matrix{
        //      scFile.close();
         } catch(FileNotFoundException ex){
             //in case file is not found
+            isFileExist = false;
             System.out.println("Nama file yang anda masukkan salah atau tidak ada file yang dimaksud di folder test!");
         }
 
     }
     public void readMatrixFromConsole(){
-        Scanner input = new Scanner(System.in);
-    	
         System.out.print("Banyak baris masukan: ");
         int nRow = input.nextInt();
         System.out.print("Banyak kolom masukan: ");
@@ -82,6 +98,7 @@ public class Matrix{
                 this.matrix[i][j] = input.nextDouble();
             }
         }
+     //   input.close();
     }
 
     public void outputMatrixFromFile(String fileName){
@@ -122,7 +139,7 @@ public class Matrix{
         this.nCol = nCol;
     }
     public void copyMatrix(Matrix origin){
-        this.nRow = origin.getNRow();
+        this.nRow = origin.getNRow();   
         this.nCol = origin.getNCol();
         double[][] matrix = origin.getMatrix();
         this.matrix = new double[this.nRow][this.nCol];
@@ -235,8 +252,9 @@ public class Matrix{
         int i, j;
         while(cRow<this.nRow && cCol<this.nCol){
             i=cRow;
-            if(this.matrix[cRow][cCol]==0){
-                while(i<this.nRow && this.matrix[i][cCol]==0){
+            if(-epsilon < this.matrix[cRow][cCol] && this.matrix[cRow][cCol] < epsilon){
+                while(i<this.nRow && -epsilon < this.matrix[i][cCol] && this.matrix[i][cCol] < epsilon){
+                    this.matrix[i][cCol] = 0;
                     i++;
                 }
             }
@@ -263,7 +281,8 @@ public class Matrix{
         int swaps = this.toTopTriangular();
         int nonZeroIdx=0;
         for(int i=0; i<this.nRow; i++){
-            while(nonZeroIdx<this.nCol && this.matrix[i][nonZeroIdx]==0){
+            while(nonZeroIdx<this.nCol && -epsilon < this.matrix[i][nonZeroIdx] && this.matrix[i][nonZeroIdx] < epsilon){
+                this.matrix[i][nonZeroIdx] = 0;
                 nonZeroIdx++;
             }
             if(nonZeroIdx<this.nCol){
@@ -277,7 +296,8 @@ public class Matrix{
         this.eliminasiGauss();
         int leadingOne=0;
         for(int i=0; i<this.nRow; i++){
-            while(leadingOne<this.nCol && this.matrix[i][leadingOne]==0){
+            while(leadingOne<this.nCol && -epsilon < this.matrix[i][leadingOne] && this.matrix[i][leadingOne] < epsilon){
+                this.matrix[i][leadingOne] = 0;
                 leadingOne++;
             }
             if(leadingOne<this.nCol){
@@ -286,6 +306,21 @@ public class Matrix{
                 }
             }
         }
+    }
+
+    /* Operation with more than one Matrix */
+    public Matrix augmentRight(Matrix right){
+        //Precondition: this.nRow == right.nRow
+        Matrix result = new Matrix(this.nRow, this.nCol + right.nCol);
+        for(int i=0; i<this.nRow; i++){
+            for(int j=0; j<this.nCol; j++){
+                result.matrix[i][j] = this.matrix[i][j];
+            }
+            for(int j=0; j<right.nCol; j++){
+                result.matrix[i][this.nCol + j] = right.matrix[i][j];
+            }
+        }
+        return result;
     }
 
     public void multiplyThisMatrix(Matrix origin){
@@ -322,10 +357,7 @@ public class Matrix{
         }
         return dotResult;
     }
-    public static Matrix createIdentityMatrix(int rowCol){
-        Matrix identity = new Matrix(rowCol, rowCol);
-        return identity;
-    }
+    
     public Boolean isEselon(){
         return true;
     }
@@ -356,13 +388,91 @@ public class Matrix{
                 result *= dummy.matrix[i][i];
             }
             return result;
-        }else{
+        }else{ //Apabila bukan matrix persegi
             return 0;
         }
         
     }
-    public double determinantByCofactor(){
-        return 0;
+    public double minorMatrix(int x, int y){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        temp = temp.cutOneRow(x);
+        temp = temp.cutOneCol(y);
+        return temp.determinantByReduction();
     }
+
+    public Matrix cofactorMatrix(){
+        Matrix cfc = new Matrix(this.nRow, this.nCol);
+        int sign;
+        for (int row = 0; row < this.nRow; row++){
+            for (int col=0; col < this.nCol; col++){
+                sign = 1 - 2*((row+col) & 1);
+                cfc.matrix[row][col] = sign * this.minorMatrix(row, col); 
+            }
+        }
+        return cfc;
+    }
+
+    public double determinantByCofactor(){
+        //Menggunakan perkalian dot pada baris pertama matriks dengan baris kofaktor
+        Matrix temp = new Matrix();
+        temp = this.cofactorMatrix();
+        double hasil = 0;
+        for (int col = 0; col < this.nCol; col++){
+            hasil += temp.matrix[0][col] * this.matrix[0][col];
+        }
+        return hasil;
+    }
+
+    public Matrix adjoinMatrix(){
+        Matrix temp = new Matrix();
+        temp = this.cofactorMatrix();
+        temp.transpose();
+        return temp;
+    }
+
+    public Matrix conMultiplyMatrix(double k){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        for (int row = 0; row < this.nRow; row++){
+            for (int col =0; col < this.nCol; col++){
+                temp.matrix[row][col] *= k;
+            }
+        }
+        return temp;
+    }
+
+    public Matrix inverseByCofactor(){
+        Matrix temp = new Matrix();
+        temp = this.adjoinMatrix();
+        double ratio = 1/(this.determinantByCofactor());
+        temp = temp.conMultiplyMatrix(ratio);
+        return temp;
+    }
+    public Matrix inverseByAugment(){
+        //Assumption Matrix is square, however put a condition just in case
+        Matrix inverse = new Matrix(this.nCol, this.nRow);
+        if(this.isSquareMatrix()){
+            Matrix identity = new Matrix(this.nRow);
+            Matrix augment = new Matrix();
+            augment = this.augmentRight(identity);
+            augment.eliminasiGaussJordan();
+            boolean isIdentity = true;
+            for(int i=0; i<this.nRow; i++){
+                if(augment.matrix[i][i] != 1){
+                    isIdentity = false;
+                }
+            }
+            if(isIdentity){
+                for(int i=0; i<this.nRow; i++){
+                    for(int j=0; j<this.nCol; j++){
+                        inverse.matrix[i][j] = augment.matrix[i][j+this.nCol];
+                    }
+                }
+            }
+        }
+        return inverse;
+    }
+
 
 }
