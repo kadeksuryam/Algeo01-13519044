@@ -49,9 +49,9 @@ public class Matrix{
         //try to find the desired file
         try{
              //use buffer to make input more efficient, instead plain filereader
-            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName)));
+            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
             //use tmpFile to determine the number of row
-            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName)));
+            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
             while(tmpFile.hasNextLine()){
                 if(this.nRow == 0){
                     this.nCol = (tmpFile.nextLine().trim().split(" ")).length;
@@ -76,6 +76,7 @@ public class Matrix{
                    }
                 }
              }
+             isFileExist = true;
        //      scFile.close();
         } catch(FileNotFoundException ex){
             //in case file is not found
@@ -84,11 +85,7 @@ public class Matrix{
         }
 
     }
-    public void readMatrixFromConsole(){
-        System.out.print("Banyak baris masukan: ");
-        int nRow = input.nextInt();
-        System.out.print("Banyak kolom masukan: ");
-        int nCol = input.nextInt();
+    public void readMatrixFromConsole(int nRow, int nCol){
         System.out.println("Matrix masukan:");
         this.matrix = new double[nRow][nCol];
         this.nRow = nRow;
@@ -289,6 +286,7 @@ public class Matrix{
                 for(int j=this.nCol-1; j>=nonZeroIdx; j--){
                     this.matrix[i][j] /= this.matrix[i][nonZeroIdx];
                 }
+                col++;
             }
         }
     }
@@ -359,9 +357,36 @@ public class Matrix{
     }
     
     public Boolean isEselon(){
+        for (int row = 0; row < this.nRow; row++){
+            for (int col = 0; col <= row; col++){
+                if (row == col){
+                    if (this.matrix[row][col] != 1){
+                        return false;
+                    }
+                }else{
+                    if (this.matrix[row][col] != 0){
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
     public Boolean isIdentityMatrix(){
+        for (int row = 0; row < this.nRow; row++){
+            for (int col = 0; col < this.nCol; col++){
+                if (row == col){
+                    if (this.matrix[row][col] != 1){
+                        return false;
+                    }
+                }else{
+                    if (this.matrix[row][col] != 0 ){
+                        return false;
+                    }
+                }
+            }
+        }
+        
         return true;
     }
     public Boolean isSquareMatrix(){
@@ -474,5 +499,80 @@ public class Matrix{
         return inverse;
     }
 
-
+    public double interpolasi(Matrix persamaan, double xTaksiran){
+        double yTaksiran=0.0;
+        //selesaikan spl dengan eliminasi gauss-jordan
+        persamaan.eliminasiGauss();
+        for(int row=0;row<persamaan.nRow;row++){
+            yTaksiran += persamaan.matrix[row][persamaan.nRow]*power(xTaksiran, row);
+        }
+        return yTaksiran;
+    }
+    public double power(double a, int b){
+        double ans = 1.0;
+        for(int i=0;i<b;i++){
+            ans *= a;
+        }
+        return ans;
+    }
+    public Matrix takeLastColFromAug(){
+        Matrix hasil = new Matrix(this.nRow, 1);
+        for (int row = 0; row < this.nRow; row++){
+            hasil.matrix[row][0] = this.matrix[row][this.nCol - 1];
+        }
+        return hasil;
+    }
+    public Matrix inverseSPL(){
+        Matrix temp = new Matrix();
+        //potong kolom terakhir dari matriks augmented
+        temp = this.cutOneCol(this.nCol-1);
+        Matrix inverse = new Matrix();
+        //habis itu diinverse
+        inverse = temp.inverseByCofactor();
+        Matrix SPL = new Matrix();
+        SPL = this.takeLastColFromAug();
+        //lalu bisa dapet x1,x2,...,xn dari perkalian dot inverse dengan hasil spl
+        Matrix hasil = new Matrix();
+        hasil = inverse.dotProduct(SPL);
+        return hasil;
+    }
+    private double methodCrammer(Matrix sol,int col){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        temp.replaceOneCol(sol, col);
+        return temp.determinantByReduction();
+    }
+    public  Matrix solusiCrammer(){
+        //Fungsi menerima matriks augmented berukuran nx(n+1)
+        //pisah dahulu matriksnya baru bisa dilakkukan metodecrammer
+        //setelah dipisah matriks akan berukuran nxn dan nx1
+        Matrix asli = new Matrix();
+        asli = this.cutOneCol(this.nCol-1);
+        Matrix kons = new Matrix();
+        kons = this.takeLastColFromAug();
+        double det = asli.determinantByReduction();
+        Matrix solusi = new Matrix(asli.nRow,1);
+        for (int i = 0; i < asli.nCol;i++){
+            double hasil = (asli.methodCrammer(kons, i) / det);
+            solusi.matrix[i][0] = hasil;
+        }
+        return solusi;
+    }
+    // for debugging
+    public static void main(String args[]){
+        int nRow, nCol;
+        Scanner sc = new Scanner(System.in); 
+        nRow = sc.nextInt();
+        nCol = sc.nextInt();
+        Matrix tes = new Matrix(nRow, nCol);
+        tes.readMatrixFromConsole(nRow, nCol);
+        // tes.eliminasiGaussJordan();
+        // tes.printMatrix();
+        // double xTaksiran = 2.0;
+        // System.out.println(tes.interpolasi(tes, xTaksiran));
+        Matrix variable = new Matrix();
+        variable = tes.solusiCrammer();
+        variable.printMatrix();;
+        sc.close();
+    }
 }
