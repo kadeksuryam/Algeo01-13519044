@@ -312,9 +312,36 @@ public class Matrix{
         return identity;
     }
     public Boolean isEselon(){
+        for (int row = 0; row < this.nRow; row++){
+            for (int col = 0; col <= row; col++){
+                if (row == col){
+                    if (this.matrix[row][col] != 1){
+                        return false;
+                    }
+                }else{
+                    if (this.matrix[row][col] != 0){
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
     public Boolean isIdentityMatrix(){
+        for (int row = 0; row < this.nRow; row++){
+            for (int col = 0; col < this.nCol; col++){
+                if (row == col){
+                    if (this.matrix[row][col] != 1){
+                        return false;
+                    }
+                }else{
+                    if (this.matrix[row][col] != 0 ){
+                        return false;
+                    }
+                }
+            }
+        }
+        
         return true;
     }
     public Boolean isSquareMatrix(){
