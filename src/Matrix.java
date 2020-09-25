@@ -479,6 +479,28 @@ public class Matrix{
         hasil = inverse.dotProduct(SPL);
         return hasil;
     }
+    private double methodCrammer(Matrix sol,int col){
+        Matrix temp = new Matrix();
+        temp.copyMatrix(this);
+        temp.replaceOneCol(sol, col);
+        return temp.determinantByReduction();
+    }
+    public  Matrix solusiCrammer(){
+        //Fungsi menerima matriks augmented berukuran nx(n+1)
+        //pisah dahulu matriksnya baru bisa dilakkukan metodecrammer
+        //setelah dipisah matriks akan berukuran nxn dan nx1
+        Matrix asli = new Matrix();
+        asli = this.cutOneCol(this.nCol-1);
+        Matrix kons = new Matrix();
+        kons = this.takeLastColFromAug();
+        double det = asli.determinantByReduction();
+        Matrix solusi = new Matrix(asli.nRow,1);
+        for (int i = 0; i < asli.nCol;i++){
+            double hasil = (asli.methodCrammer(kons, i) / det);
+            solusi.matrix[i][0] = hasil;
+        }
+        return solusi;
+    }
     // for debugging
     public static void main(String args[]){
         int nRow, nCol;
@@ -492,7 +514,7 @@ public class Matrix{
         // double xTaksiran = 2.0;
         // System.out.println(tes.interpolasi(tes, xTaksiran));
         Matrix variable = new Matrix();
-        variable = tes.inverseSPL();
+        variable = tes.solusiCrammer();
         variable.printMatrix();;
         sc.close();
     }
