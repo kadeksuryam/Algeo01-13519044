@@ -458,7 +458,27 @@ public class Matrix{
         }
         return ans;
     }
-
+    public Matrix takeLastColFromAug(){
+        Matrix hasil = new Matrix(this.nRow, 1);
+        for (int row = 0; row < this.nRow; row++){
+            hasil.matrix[row][0] = this.matrix[row][this.nCol - 1];
+        }
+        return hasil;
+    }
+    public Matrix inverseSPL(){
+        Matrix temp = new Matrix();
+        //potong kolom terakhir dari matriks augmented
+        temp = this.cutOneCol(this.nCol-1);
+        Matrix inverse = new Matrix();
+        //habis itu diinverse
+        inverse = temp.inverseByCofactor();
+        Matrix SPL = new Matrix();
+        SPL = this.takeLastColFromAug();
+        //lalu bisa dapet x1,x2,...,xn dari perkalian dot inverse dengan hasil spl
+        Matrix hasil = new Matrix();
+        hasil = inverse.dotProduct(SPL);
+        return hasil;
+    }
     // for debugging
     public static void main(String args[]){
         int nRow, nCol;
@@ -467,11 +487,13 @@ public class Matrix{
         nCol = sc.nextInt();
         Matrix tes = new Matrix(nRow, nCol);
         tes.readMatrixFromConsole(nRow, nCol);
-        tes.eliminasiGaussJordan();
-        tes.printMatrix();
-        double xTaksiran = 2.0;
-        System.out.println(tes.interpolasi(tes, xTaksiran));
-        
+        // tes.eliminasiGaussJordan();
+        // tes.printMatrix();
+        // double xTaksiran = 2.0;
+        // System.out.println(tes.interpolasi(tes, xTaksiran));
+        Matrix variable = new Matrix();
+        variable = tes.inverseSPL();
+        variable.printMatrix();;
         sc.close();
     }
 }
