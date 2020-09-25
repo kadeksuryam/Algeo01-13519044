@@ -33,9 +33,9 @@ public class Matrix{
         //try to find the desired file
         try{
              //use buffer to make input more efficient, instead plain filereader
-            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName)));
+            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
             //use tmpFile to determine the number of row
-            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName)));
+            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
             while(tmpFile.hasNextLine()){
                 if(this.nRow == 0){
                     this.nCol = (tmpFile.nextLine().trim().split(" ")).length;
@@ -60,6 +60,7 @@ public class Matrix{
                    }
                 }
              }
+             isFileExist = true;
        //      scFile.close();
         } catch(FileNotFoundException ex){
             //in case file is not found
@@ -68,11 +69,7 @@ public class Matrix{
         }
 
     }
-    public void readMatrixFromConsole(){
-        System.out.print("Banyak baris masukan: ");
-        int nRow = input.nextInt();
-        System.out.print("Banyak kolom masukan: ");
-        int nCol = input.nextInt();
+    public void readMatrixFromConsole(int nRow, int nCol){
         System.out.println("Matrix masukan:");
         this.matrix = new double[nRow][nCol];
         this.nRow = nRow;
@@ -256,21 +253,36 @@ public class Matrix{
         return swaps;
     }
     public void eliminasiGauss(){
-     //   int swaps = this.toTopTriangular();
-        int nonZeroIdx=0;
-        for(int i=0; i<this.nRow; i++){
-            while(nonZeroIdx<this.nCol && this.matrix[i][nonZeroIdx]==0){
-                nonZeroIdx++;
-            }
-            if(nonZeroIdx<this.nCol){
-                for(int j=this.nCol-1; j>=nonZeroIdx; j--){
-                    this.matrix[i][j] /= this.matrix[i][nonZeroIdx];
+        this.toTopTriangular();
+        int col=0;
+        for(int row=0;row<this.nRow;row++){
+            while(col != this.nCol-1){
+                double tmp = this.matrix[row][col];
+                if(this.matrix[row][col] != 0){
+                    for(int j= col;j<this.nCol;j++){
+                        this.matrix[row][j] /= tmp;
+                    }
+                    break;
                 }
+                col++;
             }
         }
     }
     public void eliminasiGaussJordan(){
-
+         this.eliminasiGauss();
+         //dari baris paling bawah kurangi kolom diatas yang belum nol
+         for(int row=this.nRow-1;row>=0;row--){
+             for(int col=0;col<this.nCol-1;col++){
+                 if(this.matrix[row][col] != 0){
+                     for(int tmpRow=row-1;tmpRow>=0;tmpRow--){
+                        double multipler = this.matrix[tmpRow][col]/this.matrix[row][col];
+                         for(int tmpCol=0;tmpCol<this.nCol;tmpCol++){
+                            this.matrix[tmpRow][tmpCol] -= this.matrix[row][tmpCol]*multipler;
+                         }
+                     }
+                 }
+             }
+         }
     }
 
     public void multiplyThisMatrix(Matrix origin){
@@ -403,5 +415,36 @@ public class Matrix{
         return temp;
     }
 
+    public double interpolasi(Matrix persamaan, double xTaksiran){
+        double yTaksiran=0.0;
+        //selesaikan spl dengan eliminasi gauss-jordan
+        persamaan.eliminasiGauss();
+        for(int row=0;row<persamaan.nRow;row++){
+            yTaksiran += persamaan.matrix[row][persamaan.nRow]*power(xTaksiran, row);
+        }
+        return yTaksiran;
+    }
+    public double power(double a, int b){
+        double ans = 1.0;
+        for(int i=0;i<b;i++){
+            ans *= a;
+        }
+        return ans;
+    }
 
+    // for debugging
+    public static void main(String args[]){
+        int nRow, nCol;
+        Scanner sc = new Scanner(System.in); 
+        nRow = sc.nextInt();
+        nCol = sc.nextInt();
+        Matrix tes = new Matrix(nRow, nCol);
+        tes.readMatrixFromConsole(nRow, nCol);
+        tes.eliminasiGaussJordan();
+        tes.printMatrix();
+        double xTaksiran = 2.0;
+        System.out.println(tes.interpolasi(tes, xTaksiran));
+        
+        sc.close();
+    }
 }
