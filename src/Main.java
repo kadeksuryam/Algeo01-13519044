@@ -51,7 +51,7 @@ public class Main{
                             break;
                         }
                         case 5:{
-                            //tidak perlu submenu, langsung ke metode input
+                            inputMenu("Regresi Linier Berganda");
                             break;
                         }
                         case 6:{
@@ -401,11 +401,30 @@ public class Main{
                                 case "Regresi Linier Berganda":{
                                     //masukan dari keyboard berupa n, x1i, x2i .. xni, nilai yi
                                     //dan nilai xk yang akan ditaksir nilainya
-
                                     //input
-
+                                    int m, n;
+                                    System.out.print("Masukkan n (banyak peubah x per sampel): ");
+                                    n = sc.nextInt();
+                                    System.out.print("Masukkan m (banyak sampel): ");
+                                    m = sc.nextInt();
+                                    //Masukkan m baris data berisi n peubah x dan nilai y pada masing-masing baris
+                                    Matrix dataRegresi = new Matrix(m, n+1);
+                                    dataRegresi.readMatrixFromConsole(m, n+1);
+                                    //Masukkan sebaris n peubah  yang ingin ditaksir y nya
+                                    System.out.print("Masukkan x1 sampai xn yang akan ditaksir y-nya: ");
+                                    Matrix dataTaksir = new Matrix(1, n);
+                                    dataTaksir.readMatrixFromConsole(1,n);
                                     //proses
-
+                                    //Gabungkan dengan 1 di kiri x1 sebagai koefisien B0
+                                    Matrix augmentLeft = new Matrix(1);
+                                    Matrix augmented = augmentLeft.augmentRight(dataTaksir);
+                                    //Buat SPLnya
+                                    Matrix SPLRegresi = dataRegresi.regressionSPL();
+                                    //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
+                                    Matrix hasil = SPLRegresi.solusiCrammer();
+                                    //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
+                                    Matrix yTaksir = augmented.dotProduct(hasil);
+                                    yTaksiran = yTaksir.getMatrix()[0][0];
                                     //ouput
                                     outputMenu("Regresi Linier Berganda");
                                     break;
@@ -563,7 +582,7 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    //persamaan polinom dan taksiran
+                                    System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksiran + "\n");
                                     break;
                                 }
                             }

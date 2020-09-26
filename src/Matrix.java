@@ -578,6 +578,9 @@ public class Matrix{
     }
 
     public Matrix regressionSPL(){
+        //Turns out there is a clever way to get the SPL Matrix for Double Regression
+        //using adding a column to the left, cuting rightmost column, 
+        //and multiply it with the transposed modified version of itself
         Matrix augmentLeft = new Matrix(this.nRow, 1);
         for(int i=0; i<this.nRow; i++){
             augmentLeft.matrix[i][0] = 1;
