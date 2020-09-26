@@ -286,7 +286,7 @@ public class Matrix{
                 for(int j=this.nCol-1; j>=nonZeroIdx; j--){
                     this.matrix[i][j] /= this.matrix[i][nonZeroIdx];
                 }
-                col++;
+            
             }
         }
     }
