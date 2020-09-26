@@ -286,7 +286,6 @@ public class Matrix{
                 for(int j=this.nCol-1; j>=nonZeroIdx; j--){
                     this.matrix[i][j] /= this.matrix[i][nonZeroIdx];
                 }
-                col++;
             }
         }
     }
@@ -393,10 +392,28 @@ public class Matrix{
         return (this.nRow == this.nCol);
     }
     public Boolean isRowZero(){
-        return true;
+        for(int i=0; i<this.nRow; i++){
+            boolean ret = true;
+            for(int j=0; j<this.nCol; j++){
+                ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
+            }
+            if(ret){
+                return true;
+            }
+        }
+        return false;
     }
     public Boolean isColZero(){
-        return true;
+        for(int j=0; j<this.nCol; j++){
+            boolean ret = true;
+            for(int i=0; i<this.nRow; i++){
+                ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
+            }
+            if(ret){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -557,6 +574,20 @@ public class Matrix{
             solusi.matrix[i][0] = hasil;
         }
         return solusi;
+    }
+
+    public Matrix regressionSPL(){
+        Matrix augmentLeft = new Matrix(this.nRow, 1);
+        for(int i=0; i<this.nRow; i++){
+            augmentLeft.matrix[i][0] = 1;
+        }
+        //Adding a column of "1"s to the left for b0 coefficients
+        augmentLeft = augmentLeft.augmentRight(this);
+        Matrix delRight = augmentLeft.cutOneCol(this.nCol);
+        delRight.transpose();
+        //multiply delright to augment left to get SPL
+        Matrix SPL = delRight.dotProduct(augmentLeft);
+        return SPL;
     }
     // for debugging
     public static void main(String args[]){
