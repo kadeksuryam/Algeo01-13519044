@@ -541,86 +541,29 @@ public class Main{
                                     int nCol = input.getNCol();
                                     if(metodeSPL == 1){
                                         input.eliminasiGauss();
-                                        boolean solusiBanyak = (nCol-1 > nRow);
-                                        boolean tidakAdaSolusi = true;
-                                        for(int row=0;row<nCol-1 && row < nRow;row++){
-                                            if(input.getMatrix()[row][row] == 0.0) solusiBanyak = true;
-                                            else if(input.getMatrix()[row][row] == 1.0){
-                                                if(input.getMatrix()[row][nCol-1] == 0.0){
-                                                    for(int col=row+1;col<nCol-2;col++){
-                                                        if(input.getMatrix()[row][col] != 0.0) tidakAdaSolusi = false;
-                                                    }
-                                                }
-                                                else tidakAdaSolusi = false;
-                                            }
-                                        }
-                                        if(solusiBanyak){
-                                            System.out.println("Solusi ada banyak!");
-                                            System.out.println("Berikut solusinya dalam persamaan parametrik");
-                                            input.eliminasiGaussJordan();
-
-                                            double[] valVar = new double[nCol+1];
-                                            boolean[] isParametric = new boolean[nCol+1];
-                                            for(int col=0;col<nCol;col++){ isParametric[col] = false; valVar[col] = input.getMatrix()[nRow-1][nCol-1];}
-                                            for(int col=0;col<nCol-1;col++){
-                                                boolean parametric = true;
-                                                for(int row=0;row<nRow;row++){
-                                                    if(input.getMatrix()[row][col] == 1.0) parametric=false;
-                                                }
-                                                if(parametric){
-                                                    System.out.println("x" + (col+1) + " = semua bilangan real");
-                                                    isParametric[col] = parametric;
-                                                }
-                                            }
-                                            for(int row=nRow-1;row>=0;row--){
-                                               // boolean isFoundOne = false;
-                                                double valLast = input.getMatrix()[row][nCol-1];
-                                                for(int col=0;col<nCol;col++){
-                                                    if(input.getMatrix()[row][col] == 1.0){
-                                                     //   isFoundOne = true;
-                                                        boolean isFirstFound = false;
-                                                        System.out.print("x" + (col+1) + " = ");
-                                                        for(int tmpCol=col+1;tmpCol<nCol;tmpCol++){
-                                                            double valTmp = input.getMatrix()[row][tmpCol];
-                                                            if(input.getMatrix()[row][tmpCol] != 0.0){
-                                                                if(isParametric[tmpCol]) isParametric[col] = true;
-                                                                if(!isParametric[tmpCol]) valVar[nCol-1] -= valVar[tmpCol]*valTmp;
-                                                            }
-                                                            if(tmpCol == nCol-1 && isParametric[col]){
-                                                                if(valLast != 0.0){ System.out.println(" + " + valLast);}
-                                                                else System.out.println("");
-                                                            }
-                                                            if(isParametric[col] && tmpCol != nCol-1 && valTmp != 0.0){   
-                                                                if(!isFirstFound){
-                                                                    if(valTmp == 1.0) System.out.print("x" + (tmpCol+1));
-                                                                    else System.out.print(-1*valTmp + "x" + (tmpCol+1));
-                                                                    isFirstFound = true;
-                                                                }
-                                                                else{
-                                                                    if(valTmp == 1.0) System.out.print(" + " + "x" + (tmpCol+1));
-                                                                    else System.out.print(" + " + -1*valTmp + "x" + (tmpCol+1)); 
-                                                                }
-                                                            }
-                                                        }
-                                                        if(!isParametric[col]) System.out.println(valLast);
-                                                        col = nCol;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else if(tidakAdaSolusi){
-                                            System.out.println("SPL tersebut tidak memiliki solusi");
-                                        }
-                                        else{
-                                            System.out.println("SPL tersebut memiliki satu solusi unik yaitu: ");
-                                        }
+                                        System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss");
                                         input.printMatrix();
+                                        input.eliminasiGaussJordan();
+                                        input.solutionFromGaussJordan();
                                     }
                                     else if(metodeSPL == 2){
                                         input.eliminasiGaussJordan();
                                         System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss Jordan");
                                         input.printMatrix();
                                         input.solutionFromGaussJordan();
+                                    }
+                                    else if(metodeSPL == 3){
+                                        input.solutionSPLInvers();
+                                    }
+                                    else if(metodeSPL == 4){
+                                        if(input.cutOneCol(input.getNCol()-1).determinantByReduction() == 0){
+                                            System.out.println("SPL ini solusinya tidak tunggal, karena determinannya 0");
+                                        }else{
+                                            Matrix result = input.solusiCrammer();
+                                            for(int i=0; i<result.getNRow(); i++){
+                                                System.out.println("x" + (i+1) + " = " + result.getMatrix()[i][0]);
+                                            }
+                                        }
                                     }
                                     break;
                                 }
@@ -630,7 +573,7 @@ public class Main{
                                     break;
                                 }
                                 case "Matriks Balikan":{
-                                    //output sesuai persoalan masing"
+                                    input.printMatrix();
                                     break;
                                 }
                                 case "Interpolasi Polinom":{

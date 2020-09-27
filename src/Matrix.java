@@ -624,7 +624,7 @@ public class Matrix{
                 curpar++;
             }
         }
-        if(isFirstRowZero && this.matrix[i][this.nCol-1] < -epsilon || epsilon < this.matrix[i][this.nCol-1]){
+        if(isFirstRowZero && (this.matrix[i][this.nCol-1] < -epsilon || epsilon < this.matrix[i][this.nCol-1])){
             System.out.println("Sistem ini tidak mempunyai solusi");
         }else{
             if(i==this.nCol-1){
@@ -654,6 +654,23 @@ public class Matrix{
                         curRow++;
                     }
                 }
+            }
+        }
+    }
+    public void solutionSPLInvers(){
+        //Prekondisi Matrix berukuran n x (n+1), kemudian dipisahkan bagian nxn dan 
+        Matrix SPL = this.cutOneCol(this.nCol-1);
+        Matrix constant = this.takeLastColFromAug();
+        if(SPL.determinantByReduction() == 0){
+            System.out.println("SPL ini solusinya tidak tunggal, karena determinannya 0");
+        }else{
+            Matrix inversSPL = SPL.inverseByAugment();
+            System.out.println("Invers dari SPL ini ialah");
+            inversSPL.printMatrix();
+            System.out.println("Sehingga diperoleh solusi");
+            Matrix result = inversSPL.dotProduct(constant);
+            for(int i=0; i<result.nRow; i++){
+                System.out.println("x" + (i+1) + " = " + result.matrix[i][0]);
             }
         }
     }
