@@ -618,7 +618,9 @@ public class Main{
                                     }
                                     else if(metodeSPL == 2){
                                         input.eliminasiGaussJordan();
+                                        System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss Jordan");
                                         input.printMatrix();
+                                        input.solutionFromGaussJordan();
                                     }
                                     break;
                                 }

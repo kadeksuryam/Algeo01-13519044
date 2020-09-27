@@ -595,6 +595,69 @@ public class Matrix{
         Matrix SPL = delRight.dotProduct(augmentLeft);
         return SPL;
     }
+    
+    //Output solusi SPL
+    public void solutionFromGaussJordan(){
+        //Mengoutputkan solusi dengan prekondisi Matrix sudah dilakukan eliminasi GaussJordan
+        int i=0;
+        boolean isFirstRowZero = false;
+        int[] par = new int[this.nCol];
+        for(int k=0; k<this.nCol; k++){
+            par[k]=-1;
+        }
+        int k=0;
+        while(i<this.nRow && !isFirstRowZero){
+            while(k<this.nCol-1 && -epsilon < this.matrix[i][k] && this.matrix[i][k] < epsilon){
+                k++;
+            }
+            par[k] = 0;
+            if(k==this.nCol-1){
+                isFirstRowZero = true;
+            }else{
+                i++;
+            }
+        }
+        int curpar = 1;
+        for(int j=0; j<this.nCol; j++){
+            if(par[j] == -1){
+                par[j] = curpar;
+                curpar++;
+            }
+        }
+        if(isFirstRowZero && this.matrix[i][this.nCol-1] < -epsilon || epsilon < this.matrix[i][this.nCol-1]){
+            System.out.println("Sistem ini tidak mempunyai solusi");
+        }else{
+            if(i==this.nCol-1){
+                System.out.println("Sistem ini memiliki tepat 1 solusi");
+                for(int j=0; j<this.nRow; j++){
+                    System.out.println("x"+(j+1)+" = " + (this.matrix[j][this.nCol-1]));
+                }
+            }else{
+                //i<this.nCol-1
+                System.out.println("Sistem ini memiliki banyak solusi. Berikut solusi parametrik:");
+                int curRow = 0;
+                int curCol = 0;
+                while(curCol<this.nCol-1){
+                    while(par[curCol] != 0){
+                        System.out.println("x" + (curCol+1) + " = a" + par[curCol]);
+                        curCol++;
+                    }
+                    if(curCol<this.nCol-1){
+                        System.out.print("x" + (curCol+1) + " = " + (this.matrix[curRow][this.nCol-1]));
+                        for(int j=curCol+1; j<this.nCol-1; j++){
+                            if(par[j] != 0){
+                                System.out.print(" + (" + (-this.matrix[curRow][j]) + ")a" + (par[j]));
+                            }
+                        }
+                        System.out.println();
+                        curCol++;
+                        curRow++;
+                    }
+                }
+            }
+        }
+    }
+
     // for debugging
     public static void main(String args[]){
         Scanner sc = new Scanner (System.in);
