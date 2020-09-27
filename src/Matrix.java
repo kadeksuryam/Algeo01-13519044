@@ -51,9 +51,9 @@ public class Matrix{
         //try to find the desired file
         try{
              //use buffer to make input more efficient, instead plain filereader
-            Scanner file = new Scanner(new BufferedReader(new FileReader("test/" + fileName + ".txt")));
+            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/" + fileName + ".txt")));
             //use tmpFile to determine the number of row
-            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("test/" + fileName + ".txt")));
+            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/" + fileName + ".txt")));
             while(tmpFile.hasNextLine()){
                 if(this.nRow == 0){
                     this.nCol = (tmpFile.nextLine().trim().split(" ")).length;

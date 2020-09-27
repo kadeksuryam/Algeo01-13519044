@@ -505,7 +505,7 @@ public class Main{
                              switch (operasi){
                                 case "SPL":{
                                     System.out.println("Masukkan nama file (tanpa .txt): ");
-                                    String fileName = sc.nextLine();
+                                    String fileName = file.nextLine();
                                     input.outputMatrixFromFile(fileName);
                                     break;
                                 }
