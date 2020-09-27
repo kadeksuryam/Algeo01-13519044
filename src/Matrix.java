@@ -1,9 +1,11 @@
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.*;
+
 
 public class Matrix{
     //define the static attributes 
@@ -49,9 +51,9 @@ public class Matrix{
         //try to find the desired file
         try{
              //use buffer to make input more efficient, instead plain filereader
-            Scanner file = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
+            Scanner file = new Scanner(new BufferedReader(new FileReader("test/" + fileName + ".txt")));
             //use tmpFile to determine the number of row
-            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("../test/"+ fileName + ".txt")));
+            Scanner tmpFile = new Scanner(new BufferedReader(new FileReader("test/" + fileName + ".txt")));
             while(tmpFile.hasNextLine()){
                 if(this.nRow == 0){
                     this.nCol = (tmpFile.nextLine().trim().split(" ")).length;
@@ -560,19 +562,10 @@ public class Matrix{
     }
     // for debugging
     public static void main(String args[]){
-        int nRow, nCol;
-        Scanner sc = new Scanner(System.in); 
-        nRow = sc.nextInt();
-        nCol = sc.nextInt();
-        Matrix tes = new Matrix(nRow, nCol);
-        tes.readMatrixFromConsole(nRow, nCol);
-        // tes.eliminasiGaussJordan();
-        // tes.printMatrix();
-        // double xTaksiran = 2.0;
-        // System.out.println(tes.interpolasi(tes, xTaksiran));
-        Matrix variable = new Matrix();
-        variable = tes.solusiCrammer();
-        variable.printMatrix();;
-        sc.close();
+        Scanner sc = new Scanner (System.in);
+        Matrix tes = new Matrix();
+        String fileName = sc.nextLine();
+        tes.readMatrixFromFile(fileName);      
+        sc.close();  
     }
 }
