@@ -248,7 +248,7 @@ public class Matrix{
         int cRow=0;
         int cCol=0;
         int swaps = 0;
-        int i, j;
+        int i;
         while(cRow<this.nRow && cCol<this.nCol){
             i=cRow;
             if(-epsilon < this.matrix[cRow][cCol] && this.matrix[cRow][cCol] < epsilon){
@@ -277,7 +277,7 @@ public class Matrix{
         return swaps;
     }
     public void eliminasiGauss(){
-        int swaps = this.toTopTriangular();
+        this.toTopTriangular();
         int nonZeroIdx=0;
         for(int i=0; i<this.nRow; i++){
             while(nonZeroIdx<this.nCol && -epsilon < this.matrix[i][nonZeroIdx] && this.matrix[i][nonZeroIdx] < epsilon){
@@ -522,7 +522,8 @@ public class Matrix{
     public double interpolasi(Matrix persamaan, double xTaksiran){
         double yTaksiran=0.0;
         //selesaikan spl dengan eliminasi gauss-jordan
-        persamaan.eliminasiGauss();
+        persamaan.eliminasiGaussJordan();
+       // persamaan.printMatrix();
         for(int row=0;row<persamaan.nRow;row++){
             yTaksiran += persamaan.matrix[row][persamaan.nRow]*power(xTaksiran, row);
         }

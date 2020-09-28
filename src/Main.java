@@ -1,11 +1,15 @@
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
 
 public class Main{
-    static Scanner sc = new Scanner(System.in);
-    static Scanner file = new Scanner(System.in);
+    public static Scanner sc = new Scanner(System.in);
+    public static Scanner file = new Scanner(System.in);
+    public static Scanner fileInput = new Scanner(System.in);
     public static Matrix input;
     public static Matrix sample; //Digunakan saat regresi
     public static double hasilDeterminan;
@@ -13,6 +17,9 @@ public class Main{
     public static int metodeSPL;
     public static int metodeInverse;
     public static double yTaksiran;
+    public static Matrix interpolasiMatrix;
+    public static FileWriter fileWriter;
+    public static PrintWriter printWriter;
     public static void main(String[] args){
         mainMenu();
     }
@@ -49,6 +56,7 @@ public class Main{
                         }
                         case 4:{
                             //tidak perlu submenu, langsung ke metode input
+                            inputMenu("Interpolasi Polinom");
                             break;
                         }
                         case 5:{
@@ -329,6 +337,39 @@ public class Main{
                                 }
                                 case "Interpolasi Polinom":{
                                     //masukan berupa titik" yang dipisahkan oleh baris
+                                    try{
+                                        fileInput = new Scanner(new BufferedReader(new FileReader("../test/" + fileName + ".txt")));
+                                        int banyakTitik = 0;
+                                        while(fileInput.hasNextLine()) {
+                                            banyakTitik++;
+                                            fileInput.nextLine();
+                                        }
+                                        fileInput.close();
+                                        fileInput = new Scanner(new BufferedReader(new FileReader("../test/" + fileName + ".txt")));
+    
+                                        //create augmented matrix
+                                        interpolasiMatrix = new Matrix(banyakTitik-1, banyakTitik);
+                                
+                                        for (int i=0;i<banyakTitik-1; i++) {
+                                            int j;
+                                            String[] line = fileInput.nextLine().trim().split(" ");
+                                            double x = Double.parseDouble(line[0]);
+                                            double y = Double.parseDouble(line[1]);
+                                            for(j=0;j<banyakTitik-1;j++){
+                                                interpolasiMatrix.getMatrix()[i][j] = power(x, j);
+                                            }
+                                            interpolasiMatrix.getMatrix()[i][j] = y;
+                                        }
+                                        
+                                         String[] line = fileInput.nextLine().trim().split(" ");
+                                         double xTaksiran = Double.parseDouble(line[0]);
+                                         yTaksiran = interpolasiMatrix.interpolasi(interpolasiMatrix, xTaksiran);
+                                         outputMenu("Interpolasi Polinom");
+                                    }
+                                    catch(FileNotFoundException ex){
+                                        //in case file is not found
+                                        System.out.println("Nama file yang anda masukkan salah atau tidak ada file yang dimaksud di folder test!");
+                                    }
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
@@ -392,23 +433,29 @@ public class Main{
                                     //Masukan dari keyboard berupa n, (x0, y0), (x1, y1) ..(xn, yn)
                                     int banyakTitik;
                                     //input
+                                    System.out.print("Masukkan banyaknya titik: ");
                                     banyakTitik = sc.nextInt();
                                     //build an augmented matrix
-                                    Matrix interpolasiMatrix = new Matrix(banyakTitik, banyakTitik+1);
+                                    interpolasiMatrix = new Matrix(banyakTitik, banyakTitik+1);
+                                    System.out.println("Masukkan titik-titik tersebut, (x,y) dipisahkan oleh spasi");
                                     for(int i=0;i<banyakTitik;i++){
                                         double x,y;
+                                        System.out.print("x" + (i+1) + " y" + (i+1) + " = ");
                                         x = sc.nextInt();
                                         y = sc.nextInt();
                                         int j;
                                         for(j=0;j<banyakTitik;j++){
-                                            interpolasiMatrix.getMatrix()[i][j] = x*power(x, j);
+                                            interpolasiMatrix.getMatrix()[i][j] = power(x, j);
                                         }
                                         interpolasiMatrix.getMatrix()[i][j] = y;
                                     }
                                     //input nilai yang ingin ditaksir
+                                 //   interpolasiMatrix.printMatrix();
+                                    System.out.print("Masukkan nilai yang ingin ditaksir: ");
                                     double xTaksiran = sc.nextDouble();
                                     //proses
                                     yTaksiran = interpolasiMatrix.interpolasi(interpolasiMatrix, xTaksiran);
+                                  //  interpolasiMatrix.printMatrix();
                                     //output
                                     outputMenu("Interpolasi Polinom");
                                     break;
@@ -494,10 +541,10 @@ public class Main{
                     switch (selection){
                         case 1:{
                             //output ke file
+                            System.out.println("Masukkan nama file (tanpa .txt): ");
+                            String fileName = file.nextLine();
                              switch (operasi){
                                 case "SPL":{
-                                    System.out.println("Masukkan nama file (tanpa .txt): ");
-                                    String fileName = file.nextLine();
                                     input.outputMatrixFromFile(fileName);
                                     break;
                                 }
@@ -506,14 +553,39 @@ public class Main{
                                     break;
                                 }
                                 case "Matriks Balikan":{
-                                    System.out.println("Masukkan nama file (tanpa .txt): ");
-                                    String fileName = sc.nextLine();
                                     input.outputMatrixFromFile(fileName);
                                     break;
                                 }
                                 case "Interpolasi Polinom":{
                                     //perlu float ke file
                                     //luaran berupa persamaan dan nilai taksiran
+                                    fileWriter = new FileWriter("../test/"+ fileName + ".txt");
+                                    printWriter = new PrintWriter(fileWriter);
+                                    printWriter.print("Polinomial yang terbentuk: ");
+                                    boolean isPrevProcessed = false;
+                                    for(int row=0;row<interpolasiMatrix.getNRow();row++){
+                                        double tmpVal = interpolasiMatrix.getMatrix()[row][interpolasiMatrix.getNRow()];
+                                        if(row > 0 && tmpVal != 0.0){
+                                            if(isPrevProcessed) printWriter.print(" + ");
+                                            if(tmpVal != 1.0){
+                                                if(row > 1) printWriter.print("(" + tmpVal + ")x^" + row);
+                                                else printWriter.print("(" + tmpVal + ")x");
+                                                isPrevProcessed = true;
+                                            }
+                                            else{ printWriter.print("x"); isPrevProcessed = false;}
+                                        }
+                                        else{
+                                            if(tmpVal > 0){
+                                                printWriter.print(tmpVal);    
+                                                isPrevProcessed = true;
+                                            }
+                                            else isPrevProcessed = false;
+                                        }
+                                    }
+                                    
+                                    printWriter.println("\nNilai taksiran di titik tersebut adalah " + yTaksiran + "\n");
+                                    fileWriter.flush();
+                                    fileWriter.close();
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
@@ -529,8 +601,7 @@ public class Main{
                             switch (operasi){
                                 case "SPL":{
                                     //dalam persamaan parameter atau konstanta atau tidak ada solusi
-                                    int nRow = input.getNRow();
-                                    int nCol = input.getNCol();
+
                                     if(metodeSPL == 1){
                                         input.eliminasiGauss();
                                         System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss");
@@ -576,7 +647,29 @@ public class Main{
                                 }
                                 case "Interpolasi Polinom":{
                                     //persamaan polinom dan taksiran
-                                    System.out.println("Nilai taksiran dari titik tersebut adalah " + yTaksiran + "\n");
+                                   // interpolasiMatrix.printMatrix();
+                                    System.out.print("Polinomial yang terbentuk: ");
+                                    boolean isPrevProcessed = false;
+                                    for(int row=0;row<interpolasiMatrix.getNRow();row++){
+                                        double tmpVal = interpolasiMatrix.getMatrix()[row][interpolasiMatrix.getNRow()];
+                                        if(row > 0 && tmpVal != 0.0){
+                                            if(isPrevProcessed) System.out.print(" + ");
+                                            if(tmpVal != 1.0){
+                                                if(row > 1) System.out.print("(" + tmpVal + ")x^" + row);
+                                                else System.out.print("(" + tmpVal + ")x");
+                                                isPrevProcessed = true;
+                                            }
+                                            else{ System.out.print("x"); isPrevProcessed = false;}
+                                        }
+                                        else{
+                                            if(tmpVal > 0){
+                                                System.out.print(tmpVal);    
+                                                isPrevProcessed = true;
+                                            }
+                                            else isPrevProcessed = false;
+                                        }
+                                    }
+                                    System.out.println("\nNilai taksiran di titik tersebut adalah " + yTaksiran + "\n");
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
