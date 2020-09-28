@@ -645,7 +645,7 @@ public class Matrix{
                     if(curCol<this.nCol-1){
                         System.out.print("x" + (curCol+1) + " = " + (this.matrix[curRow][this.nCol-1]));
                         for(int j=curCol+1; j<this.nCol-1; j++){
-                            if(par[j] != 0){
+                            if(par[j] != 0 && (this.matrix[curRow][j] < -epsilon || epsilon < this.matrix[curRow][j])){
                                 System.out.print(" + (" + (-this.matrix[curRow][j]) + ")a" + (par[j]));
                             }
                         }
@@ -673,6 +673,25 @@ public class Matrix{
                 System.out.println("x" + (i+1) + " = " + result.matrix[i][0]);
             }
         }
+    }
+    public void solutionFromRegression(Matrix sample){
+        //Gabungkan dengan 1 di kiri x1 sebagai koefisien B0
+        Matrix augmentLeft = new Matrix(1);
+        Matrix augmented = augmentLeft.augmentRight(sample);
+        //Buat SPLnya
+        Matrix SPLRegresi = this.regressionSPL();
+        System.out.println("Diperoleh SPL untuk mencari Regresi dalam bentuk matrix sebagai berikut:");
+        SPLRegresi.printMatrix();
+        //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
+        Matrix hasil = SPLRegresi.solusiCrammer();
+        //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
+        System.out.println("Sehingga diperoleh bentuk regresi dengan menyelesaikan SPL:");
+        System.out.print("y = " + hasil.matrix[0][0] + " ");
+        for(int i=1; i<hasil.nRow; i++){
+            System.out.print(hasil.matrix[i][0] + "x" + (i) + " ");
+        }
+        Matrix yTaksir = augmented.dotProduct(hasil);
+        System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksir.matrix[0][0]);
     }
 
     // for debugging
