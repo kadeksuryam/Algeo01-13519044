@@ -7,6 +7,7 @@ public class Main{
     static Scanner sc = new Scanner(System.in);
     static Scanner file = new Scanner(System.in);
     public static Matrix input;
+    public static Matrix sample; //Digunakan saat regresi
     public static double hasilDeterminan;
     public static int metodeDeterminan;
     public static int metodeSPL;
@@ -422,23 +423,14 @@ public class Main{
                                     System.out.print("Masukkan m (banyak sampel): ");
                                     m = sc.nextInt();
                                     //Masukkan m baris data berisi n peubah x dan nilai y pada masing-masing baris
-                                    Matrix dataRegresi = new Matrix(m, n+1);
-                                    dataRegresi.readMatrixFromConsole(m, n+1);
+                                    input.readMatrixFromConsole(m, n+1);
+                                    input.printMatrix();
                                     //Masukkan sebaris n peubah  yang ingin ditaksir y nya
-                                    System.out.print("Masukkan x1 sampai xn yang akan ditaksir y-nya: ");
-                                    Matrix dataTaksir = new Matrix(1, n);
-                                    dataTaksir.readMatrixFromConsole(1,n);
+                                    sample = new Matrix(1, n);
+                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya:");
+                                    sample.readMatrixFromConsole(1,n);
                                     //proses
-                                    //Gabungkan dengan 1 di kiri x1 sebagai koefisien B0
-                                    Matrix augmentLeft = new Matrix(1);
-                                    Matrix augmented = augmentLeft.augmentRight(dataTaksir);
-                                    //Buat SPLnya
-                                    Matrix SPLRegresi = dataRegresi.regressionSPL();
-                                    //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
-                                    Matrix hasil = SPLRegresi.solusiCrammer();
-                                    //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
-                                    Matrix yTaksir = augmented.dotProduct(hasil);
-                                    yTaksiran = yTaksir.getMatrix()[0][0];
+                                    
                                     //ouput
                                     outputMenu("Regresi Linier Berganda");
                                     break;
@@ -545,15 +537,20 @@ public class Main{
                                         input.printMatrix();
                                         input.eliminasiGaussJordan();
                                         input.solutionFromGaussJordan();
+                                        System.out.println();
+                                        break;
                                     }
                                     else if(metodeSPL == 2){
                                         input.eliminasiGaussJordan();
                                         System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss Jordan");
                                         input.printMatrix();
                                         input.solutionFromGaussJordan();
+                                        System.out.println();
+                                        break;
                                     }
                                     else if(metodeSPL == 3){
                                         input.solutionSPLInvers();
+                                        break;
                                     }
                                     else if(metodeSPL == 4){
                                         if(input.cutOneCol(input.getNCol()-1).determinantByReduction() == 0){
@@ -564,6 +561,7 @@ public class Main{
                                                 System.out.println("x" + (i+1) + " = " + result.getMatrix()[i][0]);
                                             }
                                         }
+                                        break;
                                     }
                                     break;
                                 }
@@ -582,7 +580,7 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksiran + "\n");
+                                    
                                     break;
                                 }
                             }
