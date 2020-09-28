@@ -12,7 +12,7 @@ public class Matrix{
     private int nRow, nCol;
     private double[][] matrix;
     private double epsilon = 0.000001;
-    boolean isFileExist = true;
+    public boolean isFileExist = true;
     static Scanner input = new Scanner(System.in);
     //define the constructors 
    // construct empty matrix 
