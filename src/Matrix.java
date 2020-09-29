@@ -132,12 +132,12 @@ public class Matrix{
         return this.matrix;
     }
 
-    public void setNRow(int nRow){
-        this.nRow = nRow;
-    } 
-    public void setNCol(int nCol){
-        this.nCol = nCol;
-    }
+    // public void setNRow(int nRow){
+    //     this.nRow = nRow;
+    // } 
+    // public void setNCol(int nCol){
+    //     this.nCol = nCol;
+    // }
     public void copyMatrix(Matrix origin){
         this.nRow = origin.getNRow();   
         this.nCol = origin.getNCol();
@@ -221,19 +221,19 @@ public class Matrix{
             }
         }
     }
-    public void rotate180(){
-        double[][] result = new double[this.nRow][this.nCol];
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-                result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
-            }
-        }
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-               this.matrix[i][j] = result[i][j];
-            }
-        }
-    }
+    // public void rotate180(){
+    //     double[][] result = new double[this.nRow][this.nCol];
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //             result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
+    //         }
+    //     }
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //            this.matrix[i][j] = result[i][j];
+    //         }
+    //     }
+    // }
     public void addRowToRow(int addingRow, int addedRow, double multiplier){
         int j;
         for(j=0; j<this.nCol; j++){
@@ -324,25 +324,25 @@ public class Matrix{
         return result;
     }
 
-    public void multiplyThisMatrix(Matrix origin){
-        int nRow = this.nCol;
-        int nCol = this.nRow;
-        double[][] tmpMatrix = new double[nRow][nCol];
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                tmpMatrix[row][col] = this.matrix[col][row];
-            }
-        }
-        this.matrix= new double[nRow][nCol];
-        this.nRow = nRow;
-        this.nCol = nCol;
-        //copy tmpMatrix to class's matrix
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                this.matrix[row][col] = tmpMatrix[row][col];
-            }
-        }
-    }
+    // public void multiplyThisMatrix(Matrix origin){
+    //     int nRow = this.nCol;
+    //     int nCol = this.nRow;
+    //     double[][] tmpMatrix = new double[nRow][nCol];
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             tmpMatrix[row][col] = this.matrix[col][row];
+    //         }
+    //     }
+    //     this.matrix= new double[nRow][nCol];
+    //     this.nRow = nRow;
+    //     this.nCol = nCol;
+    //     //copy tmpMatrix to class's matrix
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             this.matrix[row][col] = tmpMatrix[row][col];
+    //         }
+    //     }
+    // }
     public Matrix dotProduct(Matrix origin){
         //dot product class's matrix with origin matrix (right side)
         //assume origin matrix has right dimension
@@ -785,6 +785,117 @@ public class Matrix{
             System.out.println("Error");
         }
         
+    }
+    public void solutionFromGaussJordanFile(String fileName, boolean jordan){
+        //try to find desired output file
+        try{
+            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt"));
+            //Mengoutputkan Matrix setelah dilakukan eliminasi
+            if(jordan){
+                this.eliminasiGaussJordan();
+                fileWriter.write("Berikut matrix setelah dilakukan eliminasi Gauss Jordan");
+                fileWriter.newLine();
+            }else{
+                this.eliminasiGauss();
+                fileWriter.write("Berikut matrix setelah dilakukan eliminasi Gauss");
+                fileWriter.newLine();
+            }
+            for(int row=0;row<this.nRow;row++){
+                for(int col=0;col<this.nCol;col++){
+                    if(col != this.nCol-1) fileWriter.write(String.valueOf(matrix[row][col])+ " ");
+                    else fileWriter.write(String.valueOf(matrix[row][col]));
+                }
+                fileWriter.newLine();
+            }
+            this.eliminasiGaussJordan();
+            //Mengoutputkan solusi dengan prekondisi Matrix sudah dilakukan eliminasi GaussJordan
+            int i=0;
+            boolean isFirstRowZero = false;
+            int[] par = new int[this.nCol];
+            for(int k=0; k<this.nCol; k++){
+                par[k]=-1;
+            }
+            int k=0;
+            while(i<this.nRow && !isFirstRowZero){
+                while(k<this.nCol-1 && -epsilon < this.matrix[i][k] && this.matrix[i][k] < epsilon){
+                    k++;
+                }
+                par[k] = 0;
+                if(k==this.nCol-1){
+                    isFirstRowZero = true;
+                }else{
+                    i++;
+                }
+            }
+            int curpar = 1;
+            for(int j=0; j<this.nCol; j++){
+                if(par[j] == -1){
+                    par[j] = curpar;
+                    curpar++;
+                }
+            }
+            if(isFirstRowZero && (this.matrix[i][this.nCol-1] < -epsilon || epsilon < this.matrix[i][this.nCol-1])){
+                fileWriter.write("Sistem ini tidak mempunyai solusi");
+            }else{
+                if(i==this.nCol-1){
+                    fileWriter.write("Sistem ini memiliki tepat 1 solusi");
+                    fileWriter.newLine();
+                    for(int j=0; j<this.nRow; j++){
+                        fileWriter.write("x"+ String.valueOf(j+1) +" = " + String.valueOf(this.matrix[j][this.nCol-1]));
+                        fileWriter.newLine();
+                    }
+                }else{
+                    //i<this.nCol-1
+                    fileWriter.write("Sistem ini memiliki banyak solusi. Berikut solusi parametrik:");
+                    fileWriter.newLine();
+                    int curRow = 0;
+                    int curCol = 0;
+                    while(curCol<this.nCol-1){
+                        while(par[curCol] != 0){
+                            fileWriter.write("x" + String.valueOf(curCol+1) + " = a" + String.valueOf(par[curCol]));
+                            fileWriter.newLine();
+                            curCol++;
+                        }
+                        if(curCol<this.nCol-1){
+                            fileWriter.write("x" + String.valueOf(curCol+1) + " = " + String.valueOf(this.matrix[curRow][this.nCol-1]));
+                            for(int j=curCol+1; j<this.nCol-1; j++){
+                                if(par[j] != 0 && (this.matrix[curRow][j] < -epsilon || epsilon < this.matrix[curRow][j])){
+                                    fileWriter.write(" + (" + String.valueOf(-this.matrix[curRow][j]) + ")a" + String.valueOf(par[j]));
+                                }
+                            }
+                            fileWriter.newLine();
+                            curCol++;
+                            curRow++;
+                        }
+                    }
+                }
+            }
+            fileWriter.flush();
+            fileWriter.close();
+        } catch(Exception ex){
+            System.out.println("Error");
+        }
+    }
+    public void solutionCrammerFile(String fileName){
+        //try to find desired output file
+        try{
+            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt"));
+            double det = this.cutOneCol(this.nCol-1).determinantByReduction();
+            if(-epsilon < det && det < epsilon){
+                fileWriter.write("SPL ini solusinya tidak tunggal, karena determinannya 0");
+            }else{
+                Matrix result = this.solusiCrammer();
+                for(int i=0; i<result.nRow; i++){
+                    fileWriter.write("x" + String.valueOf(i+1) + " = " + String.valueOf(result.matrix[i][0]));
+                    fileWriter.newLine();
+                }
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch(Exception ex){
+            System.out.println("Error");
+        }
     }
 
     // for debugging
