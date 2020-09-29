@@ -14,6 +14,7 @@ public class Matrix{
     private double epsilon = 0.000001;
     public boolean isFileExist = true;
     static Scanner input = new Scanner(System.in);
+    public boolean isIdentityAfterInverse;
     //define the constructors 
    // construct empty matrix 
     public Matrix(){
@@ -103,7 +104,7 @@ public class Matrix{
     public void outputMatrixFromFile(String fileName){
         //try to find desired output file
         try{
-            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt"));
+            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt", true));
             for(int row=0;row<this.nRow;row++){
                 for(int col=0;col<this.nCol;col++){
                     if(col != this.nCol-1) fileWriter.write(String.valueOf(matrix[row][col])+ " ");
@@ -502,13 +503,13 @@ public class Matrix{
             Matrix augment = new Matrix();
             augment = this.augmentRight(identity);
             augment.eliminasiGaussJordan();
-            boolean isIdentity = true;
+            isIdentityAfterInverse = true;
             for(int i=0; i<this.nRow; i++){
                 if(augment.matrix[i][i] != 1){
-                    isIdentity = false;
+                    isIdentityAfterInverse = false;
                 }
             }
-            if(isIdentity){
+            if(isIdentityAfterInverse){
                 for(int i=0; i<this.nRow; i++){
                     for(int j=0; j<this.nCol; j++){
                         inverse.matrix[i][j] = augment.matrix[i][j+this.nCol];
@@ -606,6 +607,7 @@ public class Matrix{
         for(int k=0; k<this.nCol; k++){
             par[k]=-1;
         }
+        
         int k=0;
         while(i<this.nRow && !isFirstRowZero){
             while(k<this.nCol-1 && -epsilon < this.matrix[i][k] && this.matrix[i][k] < epsilon){
@@ -624,7 +626,7 @@ public class Matrix{
                 par[j] = curpar;
                 curpar++;
             }
-        }
+        } 
         if(isFirstRowZero && (this.matrix[i][this.nCol-1] < -epsilon || epsilon < this.matrix[i][this.nCol-1])){
             System.out.println("Sistem ini tidak mempunyai solusi");
         }else{
@@ -639,7 +641,7 @@ public class Matrix{
                 int curRow = 0;
                 int curCol = 0;
                 while(curCol<this.nCol-1){
-                    while(par[curCol] != 0){
+                    while(par[curCol] != 0 && curCol < this.nCol-1){
                         System.out.println("x" + (curCol+1) + " = a" + par[curCol]);
                         curCol++;
                     }
@@ -657,6 +659,7 @@ public class Matrix{
                 }
             }
         }
+        
     }
     public void solutionSPLInvers(){
         //Prekondisi Matrix berukuran n x (n+1), kemudian dipisahkan bagian nxn dan 
