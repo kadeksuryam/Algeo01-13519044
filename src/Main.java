@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 
@@ -299,16 +300,16 @@ public class Main{
                     hasilDeterminan = 0.0;
                     switch (selection){
                         case 1:{
-                           System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
-                           String fileName =  file.nextLine();
+                            System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
+                            String fileName =  file.nextLine();
                             switch(operasi){
                                 case "SPL":{
-                                     //masukan dari file berupa matriks augmented
-                                     input.readMatrixFromFile(fileName);
-                                     if(!input.isFileExist){
-                                         inputMenu(operasi);
-                                         return;
-                                     }
+                                    //masukan dari file berupa matriks augmented
+                                    input.readMatrixFromFile(fileName);
+                                    if(!input.isFileExist){
+                                        inputMenu(operasi);
+                                        return;
+                                    }
                                     outputMenu("SPL");
                                     break;
                                 }
@@ -331,8 +332,8 @@ public class Main{
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    if(metodeInverse == 1) input = input.inverseByAugment();
-                                    else if(metodeInverse == 2) input = input.inverseByCofactor();
+                                    if(metodeInverse == 1) input.inverseByAugment();
+                                    else if(metodeInverse == 2) input.inverseByCofactor();
                                     outputMenu("Matriks Balikan");
                                     break;
                                 }
@@ -374,7 +375,16 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    //titik" dinyatakan setiap baris
+                                    //masukan dari file berupa matriks augmented
+                                    input.readMatrixFromFile(fileName);
+                                    if(!input.isFileExist){
+                                        inputMenu(operasi);
+                                        return;
+                                    }
+                                    sample = new Matrix(1, input.getNCol()-1);
+                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk matrix 1xn):");
+                                    sample.readMatrixFromConsole(1,input.getNCol()-1);
+                                    outputMenu("Regresi Linier Berganda");
                                     break;
                                 }
                             }
@@ -401,6 +411,7 @@ public class Main{
 
                                     //input
                                     int nRow;
+                                    System.out.print("Masukkan ukuran matriks persegi (nxn): ");
                                     nRow = sc.nextInt();
                                     //matriks persegi
                                     input.readMatrixFromConsole(nRow, nRow);
@@ -418,6 +429,7 @@ public class Main{
                                     
                                     //input
                                     int nRow;
+                                    System.out.print("Masukkan ukuran matriks persegi (nxn): ");
                                     nRow = sc.nextInt();
                                     //matriks persegi
                                     input.readMatrixFromConsole(nRow, nRow);
@@ -541,7 +553,7 @@ public class Main{
                     switch (selection){
                         case 1:{
                             //output ke file
-                            System.out.println("Masukkan nama file (tanpa .txt): ");
+                            System.out.print("Masukkan nama file (tanpa .txt): ");
                             String fileName = file.nextLine();
                              switch (operasi){
                                 case "SPL":{
@@ -562,10 +574,25 @@ public class Main{
                                 }
                                 case "Determinan":{
                                     //perlu prosedur float ke file
+                                    fileWriter = new FileWriter("../test/" + fileName + ".txt");
+                                    BufferedWriter bufferWriter =  new BufferedWriter(fileWriter);
+                                    bufferWriter.write("Determinan dari matriks tersebut: ");
+                                    bufferWriter.write(String.valueOf(hasilDeterminan));
+                                    bufferWriter.newLine();
+                                    bufferWriter.flush();
                                     break;
                                 }
                                 case "Matriks Balikan":{
-                                    input.outputMatrixFromFile(fileName);
+                                    fileWriter = new FileWriter("../test/" + fileName + ".txt");
+                                    BufferedWriter bufferWriter =  new BufferedWriter(fileWriter);
+                                    if(!input.isIdentityAfterInverse) bufferWriter.write("Matriks tersebut tidak memiliki inverse!");
+                                    else{
+                                        bufferWriter.write("Matriks tersebut memiliki inverse! Berikut matriks inversenya");
+                                        bufferWriter.newLine();
+                                        input.outputMatrixFromFile(fileName);
+                                    }
+                                    bufferWriter.newLine();
+                                    bufferWriter.flush();
                                     break;
                                 }
                                 case "Interpolasi Polinom":{
@@ -648,7 +675,11 @@ public class Main{
                                     break;
                                 }
                                 case "Matriks Balikan":{
-                                    input.printMatrix();
+                                    if(!input.isIdentityAfterInverse) System.out.println("Matriks tersebut tidak memiliki inverse!");
+                                    else{
+                                        System.out.println("Matriks tersebut memiliki inverse! Berikut matriksnya");
+                                        input.printMatrix();
+                                    }
                                     break;
                                 }
                                 case "Interpolasi Polinom":{
