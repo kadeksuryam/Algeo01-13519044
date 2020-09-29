@@ -299,8 +299,8 @@ public class Main{
                     hasilDeterminan = 0.0;
                     switch (selection){
                         case 1:{
-                           System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
-                           String fileName =  file.nextLine();
+                            System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
+                            String fileName =  file.nextLine();
                             switch(operasi){
                                 case "SPL":{
                                     //masukan dari file berupa matriks augmented
@@ -380,13 +380,9 @@ public class Main{
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
-                                    fileName =  file.nextLine();
-                                    sample.readMatrixFromFile(fileName);
-                                    if(!sample.isFileExist){
-                                        inputMenu(operasi);
-                                        return;
-                                    }
+                                    sample = new Matrix(1, input.getNCol()-1);
+                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk matrix 1xn):");
+                                    sample.readMatrixFromConsole(1,input.getNCol()-1);
                                     outputMenu("Regresi Linier Berganda");
                                     break;
                                 }
