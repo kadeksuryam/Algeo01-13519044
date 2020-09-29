@@ -639,7 +639,7 @@ public class Matrix{
                 int curRow = 0;
                 int curCol = 0;
                 while(curCol<this.nCol-1){
-                    while(par[curCol] != 0){
+                    while(curCol<this.nCol-1 && par[curCol] != 0){
                         System.out.println("x" + (curCol+1) + " = a" + par[curCol]);
                         curCol++;
                     }
@@ -848,7 +848,7 @@ public class Matrix{
                     int curRow = 0;
                     int curCol = 0;
                     while(curCol<this.nCol-1){
-                        while(par[curCol] != 0){
+                        while(curCol<this.nCol-1 && par[curCol] != 0){
                             fileWriter.write("x" + String.valueOf(curCol+1) + " = a" + String.valueOf(par[curCol]));
                             fileWriter.newLine();
                             curCol++;

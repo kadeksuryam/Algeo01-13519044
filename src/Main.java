@@ -303,12 +303,12 @@ public class Main{
                            String fileName =  file.nextLine();
                             switch(operasi){
                                 case "SPL":{
-                                     //masukan dari file berupa matriks augmented
-                                     input.readMatrixFromFile(fileName);
-                                     if(!input.isFileExist){
-                                         inputMenu(operasi);
-                                         return;
-                                     }
+                                    //masukan dari file berupa matriks augmented
+                                    input.readMatrixFromFile(fileName);
+                                    if(!input.isFileExist){
+                                        inputMenu(operasi);
+                                        return;
+                                    }
                                     outputMenu("SPL");
                                     break;
                                 }
@@ -374,7 +374,20 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    //titik" dinyatakan setiap baris
+                                    //masukan dari file berupa matriks augmented
+                                    input.readMatrixFromFile(fileName);
+                                    if(!input.isFileExist){
+                                        inputMenu(operasi);
+                                        return;
+                                    }
+                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
+                                    fileName =  file.nextLine();
+                                    sample.readMatrixFromFile(fileName);
+                                    if(!sample.isFileExist){
+                                        inputMenu(operasi);
+                                        return;
+                                    }
+                                    outputMenu("Regresi Linier Berganda");
                                     break;
                                 }
                             }
