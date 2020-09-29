@@ -333,6 +333,7 @@ public class Main{
                                     }
                                     if(metodeInverse == 1) input = input.inverseByAugment();
                                     else if(metodeInverse == 2) input = input.inverseByCofactor();
+                                    outputMenu("Matriks Balikan");
                                     break;
                                 }
                                 case "Interpolasi Polinom":{
@@ -544,7 +545,19 @@ public class Main{
                             String fileName = file.nextLine();
                              switch (operasi){
                                 case "SPL":{
-                                    input.solutionSPLInversFile(fileName);
+                                    
+                                    if(metodeSPL == 1){
+                                        input.solutionFromGaussJordanFile(fileName, false);
+                                    }
+                                    else if(metodeSPL == 2){
+                                        input.solutionFromGaussJordanFile(fileName, true);
+                                    }
+                                    else if(metodeSPL == 3){
+                                        input.solutionSPLInversFile(fileName);
+                                    }
+                                    else if(metodeSPL == 4){
+                                        input.solutionCrammerFile(fileName);
+                                    }
                                     break;
                                 }
                                 case "Determinan":{
@@ -607,20 +620,15 @@ public class Main{
                                         input.printMatrix();
                                         input.eliminasiGaussJordan();
                                         input.solutionFromGaussJordan();
-                                        System.out.println();
-                                        break;
                                     }
                                     else if(metodeSPL == 2){
                                         input.eliminasiGaussJordan();
                                         System.out.println("Berikut matrix setelah dilakukan eliminasi Gauss Jordan");
                                         input.printMatrix();
                                         input.solutionFromGaussJordan();
-                                        System.out.println();
-                                        break;
                                     }
                                     else if(metodeSPL == 3){
                                         input.solutionSPLInvers();
-                                        break;
                                     }
                                     else if(metodeSPL == 4){
                                         if(input.cutOneCol(input.getNCol()-1).determinantByReduction() == 0){
@@ -631,7 +639,6 @@ public class Main{
                                                 System.out.println("x" + (i+1) + " = " + result.getMatrix()[i][0]);
                                             }
                                         }
-                                        break;
                                     }
                                     break;
                                 }
