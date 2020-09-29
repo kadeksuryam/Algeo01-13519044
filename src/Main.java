@@ -381,14 +381,16 @@ public class Main{
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
+                                    System.out.print("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
                                     fileName =  file.nextLine();
+                                    sample = new Matrix();
                                     sample.readMatrixFromFile(fileName);
+                                    
                                     if(!sample.isFileExist){
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    outputMenu("Regresi Linier Berganda");
+                                    outputMenu("Regresi Linier Berganda");  
                                     break;
                                 }
                             }
