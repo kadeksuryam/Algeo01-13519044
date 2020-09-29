@@ -683,16 +683,23 @@ public class Matrix{
         Matrix SPLRegresi = this.regressionSPL();
         System.out.println("Diperoleh SPL untuk mencari Regresi dalam bentuk matrix sebagai berikut:");
         SPLRegresi.printMatrix();
-        //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
-        Matrix hasil = SPLRegresi.solusiCrammer();
-        //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
-        System.out.println("Sehingga diperoleh bentuk regresi dengan menyelesaikan SPL:");
-        System.out.print("y = " + hasil.matrix[0][0] + " ");
-        for(int i=1; i<hasil.nRow; i++){
-            System.out.print(hasil.matrix[i][0] + "x" + (i) + " ");
+        double det = SPLRegresi.cutOneCol(SPLRegresi.nCol-1).determinantByReduction();
+        if(-epsilon < det && det < epsilon){
+            System.out.println("SPL ini solusinya tidak tunggal, karena determinannya 0");
+            System.out.println("Disarankan untuk menambah sampel data agar diperoleh regresi yang pasti");
+        }else{
+            //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
+            Matrix hasil = SPLRegresi.solusiCrammer();
+            //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
+            System.out.println("Sehingga diperoleh bentuk regresi dengan menyelesaikan SPL:");
+            System.out.print("y = " + hasil.matrix[0][0]);
+            for(int i=1; i<hasil.nRow; i++){
+                System.out.print(" + (" + hasil.matrix[i][0] + ")x" + (i));
+            }
+            System.out.println();
+            Matrix yTaksir = augmented.dotProduct(hasil);
+            System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksir.matrix[0][0]);
         }
-        Matrix yTaksir = augmented.dotProduct(hasil);
-        System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksir.matrix[0][0]);
     }
 
     // for debugging

@@ -471,10 +471,9 @@ public class Main{
                                     m = sc.nextInt();
                                     //Masukkan m baris data berisi n peubah x dan nilai y pada masing-masing baris
                                     input.readMatrixFromConsole(m, n+1);
-                                    input.printMatrix();
                                     //Masukkan sebaris n peubah  yang ingin ditaksir y nya
                                     sample = new Matrix(1, n);
-                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya:");
+                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk matrix 1xn):");
                                     sample.readMatrixFromConsole(1,n);
                                     //proses
                                     
@@ -673,7 +672,7 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    
+                                    input.solutionFromRegression(sample);
                                     break;
                                 }
                             }
