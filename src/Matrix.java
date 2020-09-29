@@ -597,7 +597,7 @@ public class Matrix{
         return SPL;
     }
     
-    //Output solusi SPL
+    //Output solusi ke Console
     public void solutionFromGaussJordan(){
         //Mengoutputkan solusi dengan prekondisi Matrix sudah dilakukan eliminasi GaussJordan
         int i=0;
@@ -700,6 +700,88 @@ public class Matrix{
             Matrix yTaksir = augmented.dotProduct(hasil);
             System.out.println("Nilai taksiran y dari n buah peubah tersebut adalah " + yTaksir.matrix[0][0]);
         }
+    }
+
+    //Output solusi ke File
+    public void solutionSPLInversFile(String fileName){
+        Matrix SPL = this.cutOneCol(this.nCol-1);
+        Matrix constant = this.takeLastColFromAug();
+        //try to find desired output file
+        try{
+            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt"));
+            if(SPL.determinantByReduction() == 0){
+                fileWriter.write("SPL ini solusinya tidak tunggal, karena determinannya 0");
+            }else{
+                Matrix inversSPL = SPL.inverseByAugment();
+                fileWriter.write("Invers dari SPL ini ialah");
+                fileWriter.newLine();
+                for(int row=0;row<inversSPL.nRow;row++){
+                    for(int col=0;col<inversSPL.nCol;col++){
+                        if(col != inversSPL.nCol-1) fileWriter.write(String.valueOf(inversSPL.matrix[row][col])+ " ");
+                        else fileWriter.write(String.valueOf(inversSPL.matrix[row][col]));
+                    }
+                    fileWriter.newLine();
+                }
+                fileWriter.write("Sehingga diperoleh solusi");
+                fileWriter.newLine();
+                Matrix result = inversSPL.dotProduct(constant);
+                for(int i=0; i<result.nRow; i++){
+                    fileWriter.write("x" + String.valueOf(i+1) + " = " + String.valueOf(result.matrix[i][0]));
+                    fileWriter.newLine();
+                }
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch(Exception ex){
+            System.out.println("Error");
+        }
+    }
+    public void solutionFromRegressionFile(Matrix sample, String fileName){
+        //Gabungkan dengan 1 di kiri x1 sebagai koefisien B0
+        Matrix augmentLeft = new Matrix(1);
+        Matrix augmented = augmentLeft.augmentRight(sample);
+        //Buat SPLnya
+        Matrix SPLRegresi = this.regressionSPL();
+        //try to find desired output file
+        try{
+            BufferedWriter fileWriter =  new BufferedWriter(new FileWriter("../test/"+ fileName + ".txt"));
+            fileWriter.write("Diperoleh SPL untuk mencari Regresi dalam bentuk matrix sebagai berikut:");
+            fileWriter.newLine();
+            for(int row=0;row<SPLRegresi.nRow;row++){
+                for(int col=0;col<SPLRegresi.nCol;col++){
+                    if(col != SPLRegresi.nCol-1) fileWriter.write(String.valueOf(SPLRegresi.matrix[row][col])+ " ");
+                    else fileWriter.write(String.valueOf(SPLRegresi.matrix[row][col]));
+                }
+                fileWriter.newLine();
+            }
+            double det = SPLRegresi.cutOneCol(SPLRegresi.nCol-1).determinantByReduction();
+            if(-epsilon < det && det < epsilon){
+                fileWriter.write("SPL ini solusinya tidak tunggal, karena determinannya 0");
+                fileWriter.newLine();
+                fileWriter.write("Disarankan untuk menambah sampel data agar diperoleh regresi yang pasti");
+                fileWriter.newLine();
+            }else{
+                //Matrix hasil berbentuk matrix (n+1)x1 yang berupa nilai B0 hingga Bn
+                Matrix hasil = SPLRegresi.solusiCrammer();
+                //y taksir adalah B0 + B1*x1 + ... + Bn*xn sehingga dapat diperoleh dengan mengalikan matrix
+                fileWriter.write("Sehingga diperoleh bentuk regresi dengan menyelesaikan SPL:");
+                fileWriter.newLine();
+                fileWriter.write("y = " + String.valueOf(hasil.matrix[0][0]));
+                for(int i=1; i<hasil.nRow; i++){
+                    fileWriter.write(" + (" + String.valueOf(hasil.matrix[i][0]) + ")x" + String.valueOf(i));
+                }
+                fileWriter.newLine();
+                Matrix yTaksir = augmented.dotProduct(hasil);
+                fileWriter.write("Nilai taksiran y dari n buah peubah tersebut adalah " + String.valueOf(yTaksir.matrix[0][0]));
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch(Exception ex){
+            System.out.println("Error");
+        }
+        
     }
 
     // for debugging

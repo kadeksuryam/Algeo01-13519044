@@ -544,7 +544,7 @@ public class Main{
                             String fileName = file.nextLine();
                              switch (operasi){
                                 case "SPL":{
-                                    input.outputMatrixFromFile(fileName);
+                                    input.solutionSPLInversFile(fileName);
                                     break;
                                 }
                                 case "Determinan":{
@@ -588,8 +588,8 @@ public class Main{
                                     break;
                                 }
                                 case "Regresi Linier Berganda":{
-                                    //perlu float ke file
                                     //luaran berupa persamaan dan nilai taksiran
+                                    input.solutionFromRegressionFile(sample, fileName);
                                     break;
                                 }
                             }                           
