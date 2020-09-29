@@ -323,25 +323,25 @@ public class Matrix{
         return result;
     }
 
-    public void multiplyThisMatrix(Matrix origin){
-        int nRow = this.nCol;
-        int nCol = this.nRow;
-        double[][] tmpMatrix = new double[nRow][nCol];
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                tmpMatrix[row][col] = this.matrix[col][row];
-            }
-        }
-        this.matrix= new double[nRow][nCol];
-        this.nRow = nRow;
-        this.nCol = nCol;
-        //copy tmpMatrix to class's matrix
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                this.matrix[row][col] = tmpMatrix[row][col];
-            }
-        }
-    }
+    // public void multiplyThisMatrix(Matrix origin){
+    //     int nRow = this.nCol;
+    //     int nCol = this.nRow;
+    //     double[][] tmpMatrix = new double[nRow][nCol];
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             tmpMatrix[row][col] = this.matrix[col][row];
+    //         }
+    //     }
+    //     this.matrix= new double[nRow][nCol];
+    //     this.nRow = nRow;
+    //     this.nCol = nCol;
+    //     //copy tmpMatrix to class's matrix
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             this.matrix[row][col] = tmpMatrix[row][col];
+    //         }
+    //     }
+    // }
     public Matrix dotProduct(Matrix origin){
         //dot product class's matrix with origin matrix (right side)
         //assume origin matrix has right dimension
