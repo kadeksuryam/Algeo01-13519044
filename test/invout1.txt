@@ -1,0 +1,1 @@
+Matriks tersebut tidak memiliki inverse!
