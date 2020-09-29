@@ -131,12 +131,12 @@ public class Matrix{
         return this.matrix;
     }
 
-    public void setNRow(int nRow){
-        this.nRow = nRow;
-    } 
-    public void setNCol(int nCol){
-        this.nCol = nCol;
-    }
+    // public void setNRow(int nRow){
+    //     this.nRow = nRow;
+    // } 
+    // public void setNCol(int nCol){
+    //     this.nCol = nCol;
+    // }
     public void copyMatrix(Matrix origin){
         this.nRow = origin.getNRow();   
         this.nCol = origin.getNCol();
@@ -220,19 +220,19 @@ public class Matrix{
             }
         }
     }
-    public void rotate180(){
-        double[][] result = new double[this.nRow][this.nCol];
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-                result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
-            }
-        }
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-               this.matrix[i][j] = result[i][j];
-            }
-        }
-    }
+    // public void rotate180(){
+    //     double[][] result = new double[this.nRow][this.nCol];
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //             result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
+    //         }
+    //     }
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //            this.matrix[i][j] = result[i][j];
+    //         }
+    //     }
+    // }
     public void addRowToRow(int addingRow, int addedRow, double multiplier){
         int j;
         for(j=0; j<this.nCol; j++){
@@ -323,25 +323,25 @@ public class Matrix{
         return result;
     }
 
-    public void multiplyThisMatrix(Matrix origin){
-        int nRow = this.nCol;
-        int nCol = this.nRow;
-        double[][] tmpMatrix = new double[nRow][nCol];
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                tmpMatrix[row][col] = this.matrix[col][row];
-            }
-        }
-        this.matrix= new double[nRow][nCol];
-        this.nRow = nRow;
-        this.nCol = nCol;
-        //copy tmpMatrix to class's matrix
-        for(int row=0;row<nRow;row++){
-            for(int col=0;col<nCol;col++){
-                this.matrix[row][col] = tmpMatrix[row][col];
-            }
-        }
-    }
+    // public void multiplyThisMatrix(Matrix origin){
+    //     int nRow = this.nCol;
+    //     int nCol = this.nRow;
+    //     double[][] tmpMatrix = new double[nRow][nCol];
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             tmpMatrix[row][col] = this.matrix[col][row];
+    //         }
+    //     }
+    //     this.matrix= new double[nRow][nCol];
+    //     this.nRow = nRow;
+    //     this.nCol = nCol;
+    //     //copy tmpMatrix to class's matrix
+    //     for(int row=0;row<nRow;row++){
+    //         for(int col=0;col<nCol;col++){
+    //             this.matrix[row][col] = tmpMatrix[row][col];
+    //         }
+    //     }
+    // }
     public Matrix dotProduct(Matrix origin){
         //dot product class's matrix with origin matrix (right side)
         //assume origin matrix has right dimension
