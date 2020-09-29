@@ -131,12 +131,12 @@ public class Matrix{
         return this.matrix;
     }
 
-    public void setNRow(int nRow){
-        this.nRow = nRow;
-    } 
-    public void setNCol(int nCol){
-        this.nCol = nCol;
-    }
+    // public void setNRow(int nRow){
+    //     this.nRow = nRow;
+    // } 
+    // public void setNCol(int nCol){
+    //     this.nCol = nCol;
+    // }
     public void copyMatrix(Matrix origin){
         this.nRow = origin.getNRow();   
         this.nCol = origin.getNCol();
@@ -220,19 +220,19 @@ public class Matrix{
             }
         }
     }
-    public void rotate180(){
-        double[][] result = new double[this.nRow][this.nCol];
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-                result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
-            }
-        }
-        for(int i=0;i<this.nRow;i++){
-            for(int j=0;j<this.nCol;j++){
-               this.matrix[i][j] = result[i][j];
-            }
-        }
-    }
+    // public void rotate180(){
+    //     double[][] result = new double[this.nRow][this.nCol];
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //             result[i][j] = this.matrix[this.nRow-1-i][this.nCol-1-j];
+    //         }
+    //     }
+    //     for(int i=0;i<this.nRow;i++){
+    //         for(int j=0;j<this.nCol;j++){
+    //            this.matrix[i][j] = result[i][j];
+    //         }
+    //     }
+    // }
     public void addRowToRow(int addingRow, int addedRow, double multiplier){
         int j;
         for(j=0; j<this.nCol; j++){
