@@ -359,66 +359,66 @@ public class Matrix{
         return dotResult;
     }
     
-    public Boolean isEselon(){
-        for (int row = 0; row < this.nRow; row++){
-            for (int col = 0; col <= row; col++){
-                if (row == col){
-                    if (this.matrix[row][col] != 1){
-                        return false;
-                    }
-                }else{
-                    if (this.matrix[row][col] != 0){
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-    public Boolean isIdentityMatrix(){
-        for (int row = 0; row < this.nRow; row++){
-            for (int col = 0; col < this.nCol; col++){
-                if (row == col){
-                    if (this.matrix[row][col] != 1){
-                        return false;
-                    }
-                }else{
-                    if (this.matrix[row][col] != 0 ){
-                        return false;
-                    }
-                }
-            }
-        }
+    // public Boolean isEselon(){
+    //     for (int row = 0; row < this.nRow; row++){
+    //         for (int col = 0; col <= row; col++){
+    //             if (row == col){
+    //                 if (this.matrix[row][col] != 1){
+    //                     return false;
+    //                 }
+    //             }else{
+    //                 if (this.matrix[row][col] != 0){
+    //                     return false;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
+    // public Boolean isIdentityMatrix(){
+    //     for (int row = 0; row < this.nRow; row++){
+    //         for (int col = 0; col < this.nCol; col++){
+    //             if (row == col){
+    //                 if (this.matrix[row][col] != 1){
+    //                     return false;
+    //                 }
+    //             }else{
+    //                 if (this.matrix[row][col] != 0 ){
+    //                     return false;
+    //                 }
+    //             }
+    //         }
+    //     }
         
-        return true;
-    }
+    //     return true;
+    // }
     public Boolean isSquareMatrix(){
         return (this.nRow == this.nCol);
     }
-    public Boolean isRowZero(){
-        for(int i=0; i<this.nRow; i++){
-            boolean ret = true;
-            for(int j=0; j<this.nCol; j++){
-                ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
-            }
-            if(ret){
-                return true;
-            }
-        }
-        return false;
-    }
-    public Boolean isColZero(){
-        for(int j=0; j<this.nCol; j++){
-            boolean ret = true;
-            for(int i=0; i<this.nRow; i++){
-                ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
-            }
-            if(ret){
-                return true;
-            }
-        }
-        return false;
-    }
+    // public Boolean isRowZero(){
+    //     for(int i=0; i<this.nRow; i++){
+    //         boolean ret = true;
+    //         for(int j=0; j<this.nCol; j++){
+    //             ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
+    //         }
+    //         if(ret){
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+    // public Boolean isColZero(){
+    //     for(int j=0; j<this.nCol; j++){
+    //         boolean ret = true;
+    //         for(int i=0; i<this.nRow; i++){
+    //             ret = ret && (-epsilon < this.matrix[i][j] && this.matrix[i][j] < epsilon);
+    //         }
+    //         if(ret){
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
 
     public double determinantByReduction(){
@@ -544,20 +544,20 @@ public class Matrix{
         }
         return hasil;
     }
-    public Matrix inverseSPL(){
-        Matrix temp = new Matrix();
-        //potong kolom terakhir dari matriks augmented
-        temp = this.cutOneCol(this.nCol-1);
-        Matrix inverse = new Matrix();
-        //habis itu diinverse
-        inverse = temp.inverseByCofactor();
-        Matrix SPL = new Matrix();
-        SPL = this.takeLastColFromAug();
-        //lalu bisa dapet x1,x2,...,xn dari perkalian dot inverse dengan hasil spl
-        Matrix hasil = new Matrix();
-        hasil = inverse.dotProduct(SPL);
-        return hasil;
-    }
+    // public Matrix inverseSPL(){
+    //     Matrix temp = new Matrix();
+    //     //potong kolom terakhir dari matriks augmented
+    //     temp = this.cutOneCol(this.nCol-1);
+    //     Matrix inverse = new Matrix();
+    //     //habis itu diinverse
+    //     inverse = temp.inverseByCofactor();
+    //     Matrix SPL = new Matrix();
+    //     SPL = this.takeLastColFromAug();
+    //     //lalu bisa dapet x1,x2,...,xn dari perkalian dot inverse dengan hasil spl
+    //     Matrix hasil = new Matrix();
+    //     hasil = inverse.dotProduct(SPL);
+    //     return hasil;
+    // }
     private double methodCrammer(Matrix sol,int col){
         Matrix temp = new Matrix();
         temp.copyMatrix(this);

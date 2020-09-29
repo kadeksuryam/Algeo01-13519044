@@ -300,8 +300,8 @@ public class Main{
                     hasilDeterminan = 0.0;
                     switch (selection){
                         case 1:{
-                           System.out.print("Masukkan nama File (tanpa .txt di belakang): ");
-                           String fileName =  file.nextLine();
+                            System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
+                            String fileName =  file.nextLine();
                             switch(operasi){
                                 case "SPL":{
                                     //masukan dari file berupa matriks augmented
