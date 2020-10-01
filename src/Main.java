@@ -382,7 +382,7 @@ public class Main{
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    System.out.print("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
+                                    System.out.print("Masukkan x1 sampai xk yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x k):");
                                     fileName =  file.nextLine();
                                     sample = new Matrix();
                                     sample.readMatrixFromFile(fileName);
@@ -491,17 +491,17 @@ public class Main{
                                     //masukan dari keyboard berupa n, x1i, x2i .. xni, nilai yi
                                     //dan nilai xk yang akan ditaksir nilainya
                                     //input
-                                    int m, n;
-                                    System.out.print("Masukkan n (banyak peubah x per sampel): ");
+                                    int k, n;
+                                    System.out.print("Masukkan k (banyak peubah x per sampel): ");
+                                    k = sc.nextInt();
+                                    System.out.print("Masukkan n (banyak sampel): ");
                                     n = sc.nextInt();
-                                    System.out.print("Masukkan m (banyak sampel): ");
-                                    m = sc.nextInt();
                                     //Masukkan m baris data berisi n peubah x dan nilai y pada masing-masing baris
-                                    input.readMatrixFromConsole(m, n+1);
+                                    input.readMatrixFromConsole(n, k+1);
                                     //Masukkan sebaris n peubah  yang ingin ditaksir y nya
-                                    sample = new Matrix(1, n);
-                                    System.out.println("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk matrix 1xn):");
-                                    sample.readMatrixFromConsole(1,n);
+                                    sample = new Matrix(1, k);
+                                    System.out.println("Masukkan x1 sampai xk yang akan ditaksir y-nya (dalam bentuk matrix 1xk):");
+                                    sample.readMatrixFromConsole(1,k);
                                     //proses
                                     
                                     //ouput
