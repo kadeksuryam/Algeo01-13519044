@@ -632,7 +632,7 @@ public class Matrix{
         }else{
             if(i==this.nCol-1){
                 System.out.println("Sistem ini memiliki tepat 1 solusi");
-                for(int j=0; j<this.nRow; j++){
+                for(int j=0; j<this.nRow && j < this.nCol-1; j++){
                     System.out.println("x"+(j+1)+" = " + (this.matrix[j][this.nCol-1]));
                 }
             }else{
@@ -840,7 +840,7 @@ public class Matrix{
                 if(i==this.nCol-1){
                     fileWriter.write("Sistem ini memiliki tepat 1 solusi");
                     fileWriter.newLine();
-                    for(int j=0; j<this.nRow; j++){
+                    for(int j=0; j<this.nRow && j < this.nCol-1; j++){
                         fileWriter.write("x"+ String.valueOf(j+1) +" = " + String.valueOf(this.matrix[j][this.nCol-1]));
                         fileWriter.newLine();
                     }
