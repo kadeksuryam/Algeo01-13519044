@@ -382,7 +382,7 @@ public class Main{
                                         inputMenu(operasi);
                                         return;
                                     }
-                                    System.out.print("Masukkan x1 sampai xn yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x (banyak x)):");
+                                    System.out.print("Masukkan x1 sampai xk yang akan ditaksir y-nya (dalam bentuk file txt matrix 1 x k):");
                                     fileName =  file.nextLine();
                                     sample = new Matrix();
                                     sample.readMatrixFromFile(fileName);
