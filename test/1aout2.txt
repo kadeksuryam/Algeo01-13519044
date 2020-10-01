@@ -1,1 +1,0 @@
-SPL ini solusinya tidak tunggal, karena determinannya 0
