@@ -13,6 +13,7 @@ public class Main{
     public static Scanner fileInput = new Scanner(System.in);
     public static Matrix input;
     public static Matrix sample; //Digunakan saat regresi
+    public static Matrix bMatrix;
     public static double hasilDeterminan;
     public static int metodeDeterminan;
     public static int metodeSPL;
@@ -300,7 +301,7 @@ public class Main{
                     hasilDeterminan = 0.0;
                     switch (selection){
                         case 1:{
-                            System.out.println("Masukkan nama File (tanpa .txt di belakang): ");
+                            System.out.print("Masukkan nama File (tanpa .txt di belakang): ");
                             String fileName =  file.nextLine();
                             switch(operasi){
                                 case "SPL":{
@@ -402,11 +403,18 @@ public class Main{
                                     // Masukan dari keyboard berupa m n, koefisien a_i_j dan b_i
                                     //input
                                     int nRow, nCol;
+                                    System.out.println("\nMenyelesaikan SPL dalam bentuk Ax = B");
+                                    System.out.println("Keterangan:\nA = matriks koefisien\nB = matriks nilai setiap variabel x\n");
+                                    System.out.print("Masukkan jumlah baris matriks koefisien: ");
                                     nRow = sc.nextInt();
+                                    System.out.print("Masukkan jumlah kolom matriks koefisien: ");
                                     nCol = sc.nextInt();
+                                    System.out.println("\nMasukkan matriks A (ukuran : baris x kolom)");
                                     input.readMatrixFromConsole(nRow, nCol);
-                                    //proses
-                                    
+                                    bMatrix = new Matrix();
+                                    System.out.println("\nMasukkan matriks B! (ukuran : baris x 1)");
+                                    bMatrix.readMatrixFromConsole(nRow, 1);
+                                    input = input.augmentRight(bMatrix);
                                     //output
                                     outputMenu("SPL");
                                     break;
@@ -460,8 +468,8 @@ public class Main{
                                     for(int i=0;i<banyakTitik;i++){
                                         double x,y;
                                         System.out.print("x" + (i+1) + " y" + (i+1) + " = ");
-                                        x = sc.nextInt();
-                                        y = sc.nextInt();
+                                        x = sc.nextDouble();
+                                        y = sc.nextDouble();
                                         int j;
                                         for(j=0;j<banyakTitik;j++){
                                             interpolasiMatrix.getMatrix()[i][j] = power(x, j);

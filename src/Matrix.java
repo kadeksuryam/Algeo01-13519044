@@ -11,7 +11,7 @@ public class Matrix{
     //define the static attributes 
     private int nRow, nCol;
     private double[][] matrix;
-    private double epsilon = 0.000001;
+    private double epsilon = 0.00000001;
     public boolean isFileExist = true;
     static Scanner input = new Scanner(System.in);
     public boolean isIdentityAfterInverse;

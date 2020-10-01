@@ -1,3 +1,0 @@
-Polinomial yang terbentuk: (1000.0)x
-Nilai taksiran di titik tersebut adalah 2500.0
-
