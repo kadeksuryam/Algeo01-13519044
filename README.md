@@ -33,5 +33,5 @@ Run `run.bat` once, it will automatically compile and run the java files.
 ## Manually compile using `javac` and running using `java`
 1. Firstly, make sure you're in `src` directory right now, if not, try to change your directory by typing `cd srcPATH` in your command line. `srcPATH` is the path where you store the `src` file which included in `Algeo01-13519044` folder.
 2. Type in into command line : `javac -d ../bin ./*.java`, it will compile all `.java` files i.e create the bytecodes.
-3. Finally, to interpret `Main` bytecode i.e run the program, type in into command line : `java -cp ../bin Main`.
+3. Finally, to interpret `Main` bytecode i.e run the program, type : `java -cp ../bin Main` into the command line.
 
